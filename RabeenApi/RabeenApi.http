@@ -1,0 +1,6 @@
+@RabeenApi_HostAddress = http://localhost:5171
+
+GET {{RabeenApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
