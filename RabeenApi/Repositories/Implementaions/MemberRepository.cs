@@ -18,4 +18,10 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
 
         return member;
     }
+
+    public async Task<List<Member>> GetAllPrimaryAsync()
+    {
+        var members = await _context.Members.Where(m=>m.IsPrimaryMember).ToListAsync();
+        return members;
+    }
 }
