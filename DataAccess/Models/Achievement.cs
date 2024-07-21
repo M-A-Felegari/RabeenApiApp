@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models;
 
-public class Achievment : BaseModel
+public class Achievement : BaseModel
 {
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

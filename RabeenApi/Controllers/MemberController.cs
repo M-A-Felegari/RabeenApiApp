@@ -12,15 +12,11 @@ public class MemberController(MemberService memberService) : ControllerBase
 {
     private readonly MemberService _memberService  = memberService;
 
-    [HttpGet("all-primary-members")]
-    public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>>
-        AllPrimaryMembers()
+    [HttpGet("all-main-members")]
+    public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> AllMainMembers()
     {
-        var result = await _memberService.GetAllPrimaryMembersAsync();
+        var result = await _memberService.GetAllMainMembersAsync();
 
-        if (result.Code == Status.ExceptionThrown)
-            return StatusCode(500, result);
-
-        return Ok(result);
+        return result.Code == Status.ExceptionThrown ? StatusCode(500, result) : Ok(result);
     }
 }

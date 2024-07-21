@@ -4,8 +4,8 @@ public class Member : BaseModel
 {
     public string Name { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
-    public bool IsPrimaryMember { get; set; }
+    public bool IsMainMember { get; set; }
     public string About { get; set; } = string.Empty;
 
-    public IEnumerable<Achievment> Achievments { get; set; } = new List<Achievment>();
+    public IEnumerable<Achievement>? Achievments { get; set; } = new List<Achievement>();
 }
