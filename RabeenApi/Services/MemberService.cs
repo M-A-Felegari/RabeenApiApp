@@ -1,13 +1,15 @@
-﻿using DataAccess.Models;
+﻿using AutoMapper;
+using DataAccess.Models;
 using RabeenApi.Dtos.Requests;
 using RabeenApi.Dtos.Results;
 using RabeenApi.Repositories;
 
 namespace RabeenApi.Services;
 
-public class MemberService(IMemberRepository memberRepository)
+public class MemberService(IMemberRepository memberRepository, IMapper mapper)
 {
     private readonly IMemberRepository _memberRepository = memberRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<BaseResult<List<MemberPreviewResult>>> GetAllMainMembersAsync()
     {
@@ -16,12 +18,7 @@ public class MemberService(IMemberRepository memberRepository)
         {
             var mainMembers = await _memberRepository.GetAllMainMembersAsync();
 
-            List<MemberPreviewResult> membersPreview = mainMembers.Select(member =>
-            {
-                var memberPreview =
-                    new MemberPreviewResult(member.Id, member.Name, member.Title, true);
-                return memberPreview;
-            }).ToList();
+            var membersPreview = _mapper.Map<List<MemberPreviewResult>>(mainMembers);
 
             result.Code = Status.Success;
             result.Data = membersPreview;
@@ -97,40 +94,16 @@ public class MemberService(IMemberRepository memberRepository)
         return result;
     }
 
-    public async Task<BaseResult<MemberInfoResult>> AddNewMember(AddMemberRequest request)
+    public async Task<BaseResult<MemberInfoResult>> AddNewMemberAsync(AddMemberRequest request)
     {
         var result = new BaseResult<MemberInfoResult>();
         try
         {
-            var memberAchievements = request.Achievements.Select(achievement =>
-            {
-                return new Achievement()
-                {
-                    Title = achievement.Title,
-                    Date = achievement.Date,
-                    Description = achievement.Description
-                };
-            });
-
-            var member = new Member()
-            {
-                Name = request.Name,
-                Title = request.Title,
-                About = request.About,
-                IsMainMember = request.IsMain,
-                Achievments = memberAchievements
-            };
+            var member = _mapper.Map<Member>(request);
 
             var addedMember = await _memberRepository.AddAsync(member);
 
-            var memberInfo = new MemberInfoResult(
-                addedMember.Id,
-                addedMember.Name,
-                addedMember.Title,
-                addedMember.About,
-                addedMember.IsMainMember,
-                addedMember.Achievments is not null ? addedMember.Achievments.ToList() : []
-            );
+            var memberInfo = _mapper.Map<MemberInfoResult>(addedMember);
 
             result.Code = Status.Success;
             result.Data = memberInfo;

@@ -18,9 +18,10 @@ public class AddMemberRequestValidator : AbstractValidator<AddMemberRequest>
         RuleFor(member => member.About)
             .NotEmpty()
             .MaximumLength(200)
-            .When(member => member.IsMain); //this property is only for main members
+            .When(member => member.IsMainMember); //this property is only for main members
 
         RuleForEach(member => member.Achievements)
-            .SetValidator(new AddAchievementRequestValidator());
+            .SetValidator(new AddAchievementRequestValidator())
+            .When(member=>member.IsMainMember); //only main members have achievements
     }
 }

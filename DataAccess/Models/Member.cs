@@ -7,5 +7,5 @@ public class Member : BaseModel
     public bool IsMainMember { get; set; }
     public string About { get; set; } = string.Empty;
 
-    public IEnumerable<Achievement>? Achievments { get; set; } = new List<Achievement>();
+    public IEnumerable<Achievement>? Achievements { get; set; } = new List<Achievement>();
 }

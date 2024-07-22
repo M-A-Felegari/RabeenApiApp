@@ -27,10 +27,10 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
 
     public async Task<List<Achievement>> GetMemberAchievementsAsync(int memberId)
     {
-        var member = await _context.Members.Include(m => m.Achievments)
+        var member = await _context.Members.Include(m => m.Achievements)
             .FirstOrDefaultAsync(m => m.Id == memberId);
         if (member is null)
             throw new KeyNotFoundException($"member with id {memberId} not found");
-        return member.Achievments.ToList();
+        return member.Achievements.ToList();
     }
 }

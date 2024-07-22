@@ -3,6 +3,6 @@
 public record AddMemberRequest(string Name,
     string Title,
     string About,
-    bool IsMain,
+    bool IsMainMember,
     List<AddAchievementRequest> Achievements
     );
