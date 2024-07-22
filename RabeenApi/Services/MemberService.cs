@@ -39,13 +39,8 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper)
         {
             var allMembers = await _memberRepository.GetAllAsync();
 
-            List<MemberPreviewResult> membersPreview = allMembers.Select(member =>
-            {
-                var memberPreview =
-                    new MemberPreviewResult(member.Id, member.Name, member.Title, member.IsMainMember);
-                return memberPreview;
-            }).ToList();
-
+            var membersPreview = _mapper.Map<List<MemberPreviewResult>>(allMembers);
+            
             result.Code = Status.Success;
             result.Data = membersPreview;
         }
@@ -72,14 +67,9 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper)
             else
             {
                 var memberAchievements = await _memberRepository.GetMemberAchievementsAsync(memberId);
-                var memberInfo = new MemberInfoResult(
-                    member.Id,
-                    member.Name,
-                    member.Title,
-                    member.About,
-                    member.IsMainMember,
-                    memberAchievements
-                );
+                member.Achievements = memberAchievements;
+
+                var memberInfo = _mapper.Map<MemberInfoResult>(member);
 
                 result.Code = Status.Success;
                 result.Data = memberInfo;
@@ -114,6 +104,66 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper)
             result.ErrorMessage = ex.Message;
         }
 
+        return result;
+    }
+
+    public async Task<BaseResult<MemberInfoResult>> UpdateMemberInfoAsync(UpdateMemberInfoRequest request)
+    {
+        var result = new BaseResult<MemberInfoResult>();
+        try
+        {
+
+            var member = await _memberRepository.GetAsync(request.Id);
+
+            if (member is null)
+            {
+                result.Code = Status.MemberNotFound;
+                result.ErrorMessage = $"member with id {request.Id} not found";
+            }
+            else
+            {
+                var updatedMember = _mapper.Map<Member>(request);
+                await _memberRepository.UpdateAsync(updatedMember);
+
+                var memberInfo = _mapper.Map<MemberInfoResult>(updatedMember);
+
+                result.Code = Status.Success;
+                result.Data = memberInfo;
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
+        return result;
+    }
+
+    //object means we don't want to pass any data to this api response
+    public async Task<BaseResult<object>> DeleteMemberAsync(DeleteMemberRequest request)
+    {
+        var result = new BaseResult<object>();
+        try
+        {
+            var member = await _memberRepository.GetAsync(request.MemberId);
+            if (member is null)
+            {
+                result.Code = Status.MemberNotFound;
+                result.ErrorMessage = $"member with id {request.MemberId} not found";
+            }
+            else
+            {
+                await _memberRepository.DeleteAsync(member);
+
+                result.Code = Status.Success;
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
         return result;
     }
 }

@@ -29,7 +29,7 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
         return model;
     }
 
-    public async Task Update(T model)
+    public async Task UpdateAsync(T model)
     {
         _context.Set<T>().Update(model);
         await _context.SaveChangesAsync();

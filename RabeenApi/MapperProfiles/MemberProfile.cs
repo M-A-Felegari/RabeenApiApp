@@ -11,6 +11,8 @@ public class MemberProfile : Profile
     {
         CreateMap<AddMemberRequest, Member>();
         
+        CreateMap<UpdateMemberInfoRequest, Member>();
+        
         CreateMap<Member, MemberInfoResult>()
             .ConstructUsing(src => new MemberInfoResult(
                 src.Id,
@@ -28,5 +30,6 @@ public class MemberProfile : Profile
                 src.Title,
                 src.IsMainMember
             ));
+
     }
 }
