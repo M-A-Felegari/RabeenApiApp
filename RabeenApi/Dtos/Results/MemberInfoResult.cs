@@ -8,5 +8,5 @@ public record MemberInfoResult(
     string Title,
     string About,
     bool IsMain,
-    List<Achievement> Achievments
+    List<AchievementResult> Achievments
     );

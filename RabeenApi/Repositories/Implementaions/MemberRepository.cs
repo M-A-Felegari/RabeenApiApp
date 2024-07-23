@@ -33,4 +33,23 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
             throw new KeyNotFoundException($"member with id {memberId} not found");
         return member.Achievements.ToList();
     }
+
+    public async Task<Member> AddAchievementToMemberAsync(int memberId, Achievement achievement)
+    {
+        var member = await _context.Members.Include(m => m.Achievements)
+            .FirstOrDefaultAsync(m => m.Id == memberId);
+        if (member is null)
+            throw new KeyNotFoundException($"member with id {memberId} not found");
+
+        var achievementsList = member.Achievements is not null ? member.Achievements.ToList() : [];
+        
+        achievementsList.Add(achievement);
+
+        member.Achievements = achievementsList;
+        
+        _context.Update(member);
+        await _context.SaveChangesAsync();
+
+        return member;
+    }
 }

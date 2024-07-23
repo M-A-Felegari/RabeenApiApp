@@ -2,7 +2,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using RabeenApi.Repositories;
 using RabeenApi.Repositories.Implementaions;
-using RabeenApi.Services;
+using RabeenApi.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<MemberService>();
+builder.Services.AddScoped<AchievementService>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

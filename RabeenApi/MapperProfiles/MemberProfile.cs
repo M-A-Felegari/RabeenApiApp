@@ -14,13 +14,14 @@ public class MemberProfile : Profile
         CreateMap<UpdateMemberInfoRequest, Member>();
         
         CreateMap<Member, MemberInfoResult>()
-            .ConstructUsing(src => new MemberInfoResult(
+            .ConstructUsing((src,context) => new MemberInfoResult(
                 src.Id,
                 src.Name,
                 src.Title,
                 src.About,
                 src.IsMainMember,
-                src.Achievements != null ? src.Achievements.ToList() : new List<Achievement>()
+                src.Achievements != null ?
+                    context.Mapper.Map<List<AchievementResult>>(src.Achievements) : []
             ));
 
         CreateMap<Member, MemberPreviewResult>()

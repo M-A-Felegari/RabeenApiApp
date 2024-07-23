@@ -4,7 +4,7 @@ using RabeenApi.Dtos.Requests;
 using RabeenApi.Dtos.Results;
 using RabeenApi.Repositories;
 
-namespace RabeenApi.Services;
+namespace RabeenApi.Services.Implementations;
 
 public class MemberService(IMemberRepository memberRepository, IMapper mapper)
 {
@@ -164,6 +164,37 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper)
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
         }
+        return result;
+    }
+
+    public async Task<BaseResult<List<AchievementResult>>> AddAchievement(AddAchievementToExistMemberRequest request)
+    {
+        var result = new BaseResult<List<AchievementResult>>();
+        try
+        {
+            var member = await _memberRepository.GetAsync(request.MemberId);
+
+            if (member is null)
+            {
+                result.Code = Status.MemberNotFound;
+                result.ErrorMessage = $"member with id {request.MemberId} not found";
+            }
+            else
+            {
+                var achievement = _mapper.Map<Achievement>(request);
+                var updatedMember = await _memberRepository.AddAchievementToMemberAsync(member.Id, achievement);
+                var achievementResults = _mapper.Map<List<AchievementResult>>(updatedMember.Achievements);
+
+                result.Code = Status.Success;
+                result.Data = achievementResults;
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
         return result;
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos.Requests;
 using RabeenApi.Dtos.Results;
 using RabeenApi.Repositories;
-using RabeenApi.Services;
+using RabeenApi.Services.Implementations;
 namespace RabeenApi.Controllers;
 
 [ApiController]
@@ -32,5 +32,11 @@ public class MemberController(MemberService memberService) : ControllerBase
         // }
 
         return result;
+    }
+    
+    [HttpPost("add-achievement-to-member")]
+    public async Task<IActionResult> Add(AddAchievementToExistMemberRequest request)
+    {
+        return Ok(await _memberService.AddAchievement(request));
     }
 }
