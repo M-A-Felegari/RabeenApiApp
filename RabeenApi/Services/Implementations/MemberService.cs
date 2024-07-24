@@ -6,10 +6,11 @@ using RabeenApi.Repositories;
 
 namespace RabeenApi.Services.Implementations;
 
-public class MemberService(IMemberRepository memberRepository, IMapper mapper)
+public class MemberService(IMemberRepository memberRepository, IMapper mapper,IFileSaver fileSaver)
 {
     private readonly IMemberRepository _memberRepository = memberRepository;
     private readonly IMapper _mapper = mapper;
+    private readonly IFileSaver _fileSaver = fileSaver;
 
     public async Task<BaseResult<List<MemberPreviewResult>>> GetAllMainMembersAsync()
     {
@@ -92,7 +93,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper)
             var member = _mapper.Map<Member>(request);
 
             var addedMember = await _memberRepository.AddAsync(member);
-
+            
             var memberInfo = _mapper.Map<MemberInfoResult>(addedMember);
 
             result.Code = Status.Success;
@@ -107,6 +108,58 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper)
         return result;
     }
 
+    public async Task<BaseResult<object>> SetProfilePictureAsync(SetProfilePictureRequest request)
+    {
+        var result = new BaseResult<object>();
+        try
+        {
+            var member = await _memberRepository.GetAsync(request.Id);
+
+            if (member is null)
+            {
+                result.Code = Status.MemberNotFound;
+                result.ErrorMessage = $"member with id {request.Id} not found";
+            }
+            else
+            {
+                await _fileSaver.SaveFileAsync(request.Picture, $@"data\members-profile\{request.Id}.jpg");
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
+        return result;
+    }
+
+    public async Task<BaseResult<object>> SetMemberCvAsync(SetMemberCvRequest request)
+    {
+        var result = new BaseResult<object>();
+        try
+        {
+            var member = await _memberRepository.GetAsync(request.Id);
+
+            if (member is null)
+            {
+                result.Code = Status.MemberNotFound;
+                result.ErrorMessage = $"member with id {request.Id} not found";
+            }
+            else
+            {
+                await _fileSaver.SaveFileAsync(request.CvFile, $@"data\members-cv\{request.Id}.pdf");
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
+        return result;
+    }
+    
     public async Task<BaseResult<MemberInfoResult>> UpdateMemberInfoAsync(UpdateMemberInfoRequest request)
     {
         var result = new BaseResult<MemberInfoResult>();

@@ -3,7 +3,7 @@ using DataAccess.Models;
 using RabeenApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace RabeenApi.Repositories.Implementaions;
+namespace RabeenApi.Repositories.Implementations;
 
 public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
     where T : BaseModel
@@ -14,6 +14,18 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
     {
         var result = await _context.Set<T>().ToListAsync();
         return result;
+    }
+    
+    public async Task<List<T>> GetLastsByPagination(int pageNumber, int pageLength)
+    {
+        var messages = await _context.Set<T>()
+            .OrderByDescending(c => c.Id)
+            .Skip(pageNumber * pageLength)
+            .Take(pageLength)
+            .ToListAsync();
+
+        return messages;
+
     }
 
     public async Task<T?> GetAsync(int id)

@@ -2,7 +2,7 @@
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace RabeenApi.Repositories.Implementaions;
+namespace RabeenApi.Repositories.Implementations;
 
 public class MemberRepository(DataContext context) : GenericRepository<Member>(context),
     IMemberRepository

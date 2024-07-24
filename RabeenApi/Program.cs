@@ -1,7 +1,8 @@
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using RabeenApi.Repositories;
-using RabeenApi.Repositories.Implementaions;
+using RabeenApi.Repositories.Implementations;
+using RabeenApi.Services;
 using RabeenApi.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<MemberService>();
 builder.Services.AddScoped<AchievementService>();
+builder.Services.AddScoped<IFileSaver, FileSaver>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 

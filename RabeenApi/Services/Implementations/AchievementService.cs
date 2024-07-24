@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DataAccess.Models;
 using RabeenApi.Dtos.Requests;
 using RabeenApi.Dtos.Results;
 using RabeenApi.Repositories;

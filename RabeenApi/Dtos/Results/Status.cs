@@ -7,4 +7,5 @@ public enum Status
     MemberNotFound = 10,
     MemberIsNotMain,
     AchievementNotFound = 20,
+    ContactMessageNotFound = 30,
 }

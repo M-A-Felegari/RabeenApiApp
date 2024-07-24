@@ -1,8 +1,11 @@
-﻿namespace RabeenApi.Dtos.Requests;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public record AddMemberRequest(string Name,
+namespace RabeenApi.Dtos.Requests;
+
+public record AddMemberRequest(
+    string Name,
     string Title,
     string About,
     bool IsMainMember,
     List<AddAchievementRequest> Achievements
-    );
+);

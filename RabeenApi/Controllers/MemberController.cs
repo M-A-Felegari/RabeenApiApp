@@ -33,6 +33,22 @@ public class MemberController(MemberService memberService) : ControllerBase
 
         return result;
     }
+
+    [HttpPost("set-profile")]
+    public async Task<BaseResult<object>> SetProfileAsync([FromForm] SetProfilePictureRequest request)
+    {
+        var result = await _memberService.SetProfilePictureAsync(request);
+
+        return result;
+    }
+    
+    [HttpPost("set-cv")]
+    public async Task<BaseResult<object>> SetCvAsync([FromForm] SetMemberCvRequest request)
+    {
+        var result = await _memberService.SetMemberCvAsync(request);
+
+        return result;
+    }
     
     [HttpPost("add-achievement-to-member")]
     public async Task<IActionResult> Add(AddAchievementToExistMemberRequest request)
