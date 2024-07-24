@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using RabeenApi.Dtos.Requests;
-using RabeenApi.Dtos.Results;
 using RabeenApi.Repositories;
 using DataAccess.Models;
+using RabeenApi.Dtos;
+using RabeenApi.Dtos.Association.Requests;
+using RabeenApi.Dtos.Association.Results;
 
 namespace RabeenApi.Services.Implementations;
 

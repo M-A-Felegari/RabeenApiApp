@@ -1,4 +1,4 @@
-﻿using RabeenApi.Dtos.Results;
+﻿using RabeenApi.Dtos;
 using RabeenApi.Strategies.ActionResultHandlerStrategy;
 
 namespace RabeenApi.Factories;

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RabeenApi.Dtos.Requests;
-using RabeenApi.Dtos.Results;
+using RabeenApi.Dtos;
+using RabeenApi.Dtos.Achievement.Requests;
+using RabeenApi.Dtos.Achievement.Results;
+using RabeenApi.Dtos.Member.Requests;
+using RabeenApi.Dtos.Member.Results;
 using RabeenApi.Factories;
 using RabeenApi.Services.Implementations;
 namespace RabeenApi.Controllers;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RabeenApi.Dtos.Requests;
 using RabeenApi.Services.Implementations;
 
 namespace RabeenApi.Controllers;

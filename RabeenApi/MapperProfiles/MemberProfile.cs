@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
-using RabeenApi.Dtos.Requests;
-using RabeenApi.Dtos.Results;
+using RabeenApi.Dtos.Achievement.Results;
+using RabeenApi.Dtos.Member.Requests;
+using RabeenApi.Dtos.Member.Results;
 
 namespace RabeenApi.MapperProfiles;
 

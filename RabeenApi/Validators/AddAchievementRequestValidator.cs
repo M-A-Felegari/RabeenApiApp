@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RabeenApi.Dtos.Requests;
+using RabeenApi.Dtos.Achievement.Requests;
 
 namespace RabeenApi.Validators;
 

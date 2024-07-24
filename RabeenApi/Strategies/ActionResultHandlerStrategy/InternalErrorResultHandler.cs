@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RabeenApi.Dtos.Results;
+using RabeenApi.Dtos;
 
 namespace RabeenApi.Strategies.ActionResultHandlerStrategy;
 
