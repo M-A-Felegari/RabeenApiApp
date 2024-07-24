@@ -1,24 +1,24 @@
-﻿using DataAccess.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos.Requests;
 using RabeenApi.Dtos.Results;
-using RabeenApi.Repositories;
+using RabeenApi.Factories;
 using RabeenApi.Services.Implementations;
 namespace RabeenApi.Controllers;
 
 [ApiController]
 [Route("[Controller]")]
-public class MemberController(MemberService memberService) : ControllerBase
+public class MemberController(MemberService memberService,
+    ActionResultHandlersFactory handlersFactory) : ControllerBase
 {
     private readonly MemberService _memberService  = memberService;
+    private readonly ActionResultHandlersFactory _handlersFactory = handlersFactory;
 
     [HttpGet("all-main-members")]
     public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> AllMainMembers()
     {
         var result = await _memberService.GetAllMainMembersAsync();
 
-        return result.Code == Status.ExceptionThrown ? StatusCode(500, result) : Ok(result);
+        return GetActionResultToReturn(result);
     }
 
     [HttpPost("add")]
@@ -26,33 +26,38 @@ public class MemberController(MemberService memberService) : ControllerBase
     {
         var result = await _memberService.AddNewMemberAsync(request);
 
-        // return swtich (result.Code)
-        // {
-        //     Status.Success => Ok(result);
-        // }
-
-        return result;
+        return GetActionResultToReturn(result);
     }
 
     [HttpPost("set-profile")]
-    public async Task<BaseResult<object>> SetProfileAsync([FromForm] SetProfilePictureRequest request)
+    public async Task<ActionResult<BaseResult<object>>> SetProfileAsync([FromForm] SetProfilePictureRequest request)
     {
         var result = await _memberService.SetProfilePictureAsync(request);
 
-        return result;
+        return GetActionResultToReturn(result);
     }
     
     [HttpPost("set-cv")]
-    public async Task<BaseResult<object>> SetCvAsync([FromForm] SetMemberCvRequest request)
+    public async Task<ActionResult<BaseResult<object>>> SetCvAsync([FromForm] SetMemberCvRequest request)
     {
         var result = await _memberService.SetMemberCvAsync(request);
 
-        return result;
+        return GetActionResultToReturn(result);
     }
     
     [HttpPost("add-achievement-to-member")]
-    public async Task<IActionResult> Add(AddAchievementToExistMemberRequest request)
+    public async Task<ActionResult<BaseResult<List<AchievementResult>>>> Add(
+        AddAchievementToExistMemberRequest request)
     {
-        return Ok(await _memberService.AddAchievement(request));
+        var result = await _memberService.AddAchievement(request);
+
+        return GetActionResultToReturn(result);
+    }
+
+    private ActionResult GetActionResultToReturn<T>(BaseResult<T> result)
+    {
+        var actionResult = _handlersFactory.GetHandler(result.Code);
+
+        return actionResult is not null ? actionResult.Handle(result) : StatusCode(500, result);
     }
 }

@@ -1,5 +1,6 @@
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
+using RabeenApi.Factories;
 using RabeenApi.Repositories;
 using RabeenApi.Repositories.Implementations;
 using RabeenApi.Services;
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<ActionResultHandlersFactory>();
 
 builder.Services.AddScoped<MemberService>();
 builder.Services.AddScoped<AchievementService>();
