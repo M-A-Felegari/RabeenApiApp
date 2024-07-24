@@ -12,12 +12,13 @@ public class AssociationService(IAssociationRepository associationRepository, IM
     private readonly IMapper _mapper = mapper;
     private readonly IFileSaver _fileSaver = fileSaver;
 
-    public async Task<BaseResult<List<AssociationInfoResult>>> GetAllAsync(int pageNumber, int pageLength)
+    public async Task<BaseResult<List<AssociationInfoResult>>> GetAllAsync(GetAllAssociationsRequest request)
     {
         var result = new BaseResult<List<AssociationInfoResult>>();
         try
         {
-            var associations = await _associationRepository.GetLastsByPagination(pageNumber, pageLength);
+            var associations = 
+                await _associationRepository.GetLastsByPagination(request.PageNumber, request.PageLength);
             var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
             result.Data = associationResults;
             result.Code = Status.Success;
@@ -31,16 +32,16 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<AssociationInfoResult>> GetAssociationInfoAsync(int id)
+    public async Task<BaseResult<AssociationInfoResult>> GetAssociationInfoAsync(GetAssociationRequest request)
     {
         var result = new BaseResult<AssociationInfoResult>();
         try
         {
-            var association = await _associationRepository.GetAsync(id);
+            var association = await _associationRepository.GetAsync(request.Id);
             if (association is null)
             {
                 result.Code = Status.AssociationNotFound;
-                result.ErrorMessage = $"Association with id {id} not found";
+                result.ErrorMessage = $"Association with id {request.Id} not found";
             }
             else
             {
@@ -120,7 +121,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                await _fileSaver.SaveFileAsync(request.Logo, $@"data\association-logos\{request.Id}.jpg");
+                await _fileSaver.SaveFileAsync(request.Logo, $@"data\association-logos\{association.Id}.jpg");
                 result.Code = Status.Success;
             }
         }
@@ -133,21 +134,21 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<object>> DeleteAssociationAsync(int id)
+    public async Task<BaseResult<object>> DeleteAssociationAsync(DeleteAssociationRequest request)
     {
         var result = new BaseResult<object>();
         try
         {
-            var association = await _associationRepository.GetAsync(id);
+            var association = await _associationRepository.GetAsync(request.Id);
             if (association is null)
             {
                 result.Code = Status.AssociationNotFound;
-                result.ErrorMessage = $"Association with id {id} not found";
+                result.ErrorMessage = $"Association with id {request.Id} not found";
             }
             else
             {
                 //todo: first delete the cooperations
-                await _associationRepository.DeleteAsync(id);
+                await _associationRepository.DeleteAsync(association.Id);
                 result.Code = Status.Success;
             }
         }
