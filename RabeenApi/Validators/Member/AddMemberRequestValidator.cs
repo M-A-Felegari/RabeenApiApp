@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using RabeenApi.Dtos.Member.Requests;
+using RabeenApi.Validators.Achievement;
 
-namespace RabeenApi.Validators;
+namespace RabeenApi.Validators.Member;
 
 public class AddMemberRequestValidator : AbstractValidator<AddMemberRequest>
 {

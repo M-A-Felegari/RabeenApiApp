@@ -1,21 +1,21 @@
 ﻿using FluentValidation;
 using RabeenApi.Dtos.Achievement.Requests;
 
-namespace RabeenApi.Validators;
+namespace RabeenApi.Validators.Achievement;
 
 public class AddAchievementRequestValidator : AbstractValidator<AddAchievementRequest>
 {
     public AddAchievementRequestValidator()
     {
+
         RuleFor(achievement => achievement.Title)
-            .NotEmpty()
-            .MaximumLength(60);
-        
+            .NotEmpty();
+
         RuleFor(achievement => achievement.Description)
-            .NotEmpty()
-            .MaximumLength(180);
-        
+            .NotEmpty();
+
         RuleFor(achievement => achievement.Date)
-            .NotNull();
+            .LessThanOrEqualTo(DateTime.Now)
+            .WithMessage("time must be in the past");
     }
 }

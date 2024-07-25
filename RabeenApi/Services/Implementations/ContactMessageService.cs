@@ -19,7 +19,7 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
         try
         {
             var messages = await _contactMessageRepository
-                .GetLastsByPagination(request.PageNumber, 20);
+                .GetLastsByPagination(request.PageNumber, request.PageLength);
 
             var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
             result.Code = Status.Success;
