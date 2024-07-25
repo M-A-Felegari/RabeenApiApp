@@ -104,7 +104,7 @@ namespace RabeenApi.Services.Implementations
                     }
                     else
                     {
-                        _mapper.Map(request, cooperation);
+                        cooperation = _mapper.Map<AssociationCooperation>(request);
                         await _cooperationRepository.UpdateAsync(cooperation);
                         await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
 
