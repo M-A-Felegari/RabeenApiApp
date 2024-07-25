@@ -4,6 +4,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Association.Requests;
 using RabeenApi.Dtos.Association.Results;
+using RabeenApi.Validators.Association;
 
 namespace RabeenApi.Services.Implementations;
 
@@ -16,13 +17,23 @@ public class AssociationService(IAssociationRepository associationRepository, IM
     public async Task<BaseResult<List<AssociationInfoResult>>> GetAllAsync(GetAllAssociationsRequest request)
     {
         var result = new BaseResult<List<AssociationInfoResult>>();
+        var validator = new GetAllAssociationsRequestValidator();
         try
         {
-            var associations = 
-                await _associationRepository.GetLastsByPagination(request.PageNumber, request.PageLength);
-            var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
-            result.Data = associationResults;
-            result.Code = Status.Success;
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
+            }
+            else
+            {
+                var associations =
+                    await _associationRepository.GetLastsByPagination(request.PageNumber, request.PageLength);
+                var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
+                result.Data = associationResults;
+                result.Code = Status.Success;
+            }
         }
         catch (Exception ex)
         {
@@ -63,38 +74,19 @@ public class AssociationService(IAssociationRepository associationRepository, IM
     public async Task<BaseResult<AssociationInfoResult>> AddAssociationAsync(AddAssociationRequest request)
     {
         var result = new BaseResult<AssociationInfoResult>();
+        var validator = new AddAssociationRequestValidator();
         try
         {
-            var association = _mapper.Map<Association>(request);
-            await _associationRepository.AddAsync(association);
-            var associationResult = _mapper.Map<AssociationInfoResult>(association);
-            result.Data = associationResult;
-            result.Code = Status.Success;
-        }
-        catch (Exception ex)
-        {
-            result.Code = Status.ExceptionThrown;
-            result.ErrorMessage = ex.Message;
-        }
-
-        return result;
-    }
-
-    public async Task<BaseResult<AssociationInfoResult>> UpdateAssociationInfoAsync(UpdateAssociationRequest request)
-    {
-        var result = new BaseResult<AssociationInfoResult>();
-        try
-        {
-            var association = await _associationRepository.GetAsync(request.Id);
-            if (association is null)
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
             {
-                result.Code = Status.AssociationNotFound;
-                result.ErrorMessage = $"Association with id {request.Id} not found";
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
             }
             else
             {
-                association = _mapper.Map<Association>(request);
-                await _associationRepository.UpdateAsync(association);
+                var association = _mapper.Map<Association>(request);
+                await _associationRepository.AddAsync(association);
                 var associationResult = _mapper.Map<AssociationInfoResult>(association);
                 result.Data = associationResult;
                 result.Code = Status.Success;
@@ -109,21 +101,70 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<object>> SetAssociationLogoAsync(SetAssociationLogoRequest request)
+    public async Task<BaseResult<AssociationInfoResult>> UpdateAssociationInfoAsync(UpdateAssociationRequest request)
     {
-        var result = new BaseResult<object>();
+        var result = new BaseResult<AssociationInfoResult>();
+        var validator = new UpdateAssociationRequestValidator();
         try
         {
-            var association = await _associationRepository.GetAsync(request.Id);
-            if (association is null)
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
             {
-                result.Code = Status.AssociationNotFound;
-                result.ErrorMessage = $"Association with id {request.Id} not found";
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
             }
             else
             {
-                await _fileSaver.SaveFileAsync(request.Logo, $@"data\association-logos\{association.Id}.jpg");
-                result.Code = Status.Success;
+                var association = await _associationRepository.GetAsync(request.Id);
+                if (association is null)
+                {
+                    result.Code = Status.AssociationNotFound;
+                    result.ErrorMessage = $"Association with id {request.Id} not found";
+                }
+                else
+                {
+                    association = _mapper.Map<Association>(request);
+                    await _associationRepository.UpdateAsync(association);
+                    var associationResult = _mapper.Map<AssociationInfoResult>(association);
+                    result.Data = associationResult;
+                    result.Code = Status.Success;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
+        return result;
+    }
+
+    public async Task<BaseResult<object>> SetAssociationLogoAsync(SetAssociationLogoRequest request)
+    {
+        var result = new BaseResult<object>();
+        var validator = new SetAssociationLogoRequestValidator();
+        try
+        {
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
+            }
+            else
+            {
+                var association = await _associationRepository.GetAsync(request.Id);
+                if (association is null)
+                {
+                    result.Code = Status.AssociationNotFound;
+                    result.ErrorMessage = $"Association with id {request.Id} not found";
+                }
+                else
+                {
+                    await _fileSaver.SaveFileAsync(request.Logo, $@"data\association-logos\{association.Id}.jpg");
+                    result.Code = Status.Success;
+                }
             }
         }
         catch (Exception ex)

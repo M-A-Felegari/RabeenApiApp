@@ -4,6 +4,7 @@ public enum Status
 {
     ExceptionThrown = -1,
     Success = 0,
+    NotValid,
     MemberNotFound = 10,
     MemberIsNotMain,
     AchievementNotFound = 20,

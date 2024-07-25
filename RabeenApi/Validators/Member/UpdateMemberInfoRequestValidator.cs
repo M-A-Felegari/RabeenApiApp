@@ -3,9 +3,9 @@ using RabeenApi.Dtos.Member.Requests;
 
 namespace RabeenApi.Validators.Member;
 
-public class UpdateMemberRequestInfoValidator:AbstractValidator<UpdateMemberInfoRequest>
+public class UpdateMemberInfoRequestValidator:AbstractValidator<UpdateMemberInfoRequest>
 {
-    public UpdateMemberRequestInfoValidator()
+    public UpdateMemberInfoRequestValidator()
     {
         RuleFor(member => member.Name)
             .NotEmpty();

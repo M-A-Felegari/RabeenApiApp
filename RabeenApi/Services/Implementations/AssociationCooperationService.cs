@@ -4,6 +4,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.AssociationCooperation.Requests;
 using RabeenApi.Dtos.AssociationCooperation.Results;
+using RabeenApi.Validators.AssociationCooperation;
 
 namespace RabeenApi.Services.Implementations
 {
@@ -21,14 +22,24 @@ namespace RabeenApi.Services.Implementations
             GetAllAssociationCooperationsRequest request)
         {
             var result = new BaseResult<List<AssociationCooperationResult>>();
+            var validator = new GetAllAssociationCooperationsRequestValidator();
             try
             {
-                var cooperations =
-                    await _cooperationRepository.GetAllByAssociationIdAsync(request.AssociationId,
-                        request.PageNumber,request.PageLength);
-                var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
-                result.Data = cooperationResults;
-                result.Code = Status.Success;
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                {
+                    result.Code = Status.NotValid;
+                    result.ErrorMessage = validationResult.ToString("~");
+                }
+                else
+                {
+                    var cooperations =
+                        await _cooperationRepository.GetAllByAssociationIdAsync(request.AssociationId,
+                            request.PageNumber, request.PageLength);
+                    var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
+                    result.Data = cooperationResults;
+                    result.Code = Status.Success;
+                }
             }
             catch (Exception ex)
             {
@@ -42,14 +53,24 @@ namespace RabeenApi.Services.Implementations
         public async Task<BaseResult<AssociationCooperationResult>> AddCooperationAsync(AddCooperationRequest request)
         {
             var result = new BaseResult<AssociationCooperationResult>();
+            var validator = new AddCooperationRequestValidator();
             try
             {
-                var cooperation = _mapper.Map<AssociationCooperation>(request);
-                await _cooperationRepository.AddAsync(cooperation);
-                await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
-                var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
-                result.Data = cooperationResult;
-                result.Code = Status.Success;
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                {
+                    result.Code = Status.NotValid;
+                    result.ErrorMessage = validationResult.ToString("~");
+                }
+                else
+                {
+                    var cooperation = _mapper.Map<AssociationCooperation>(request);
+                    await _cooperationRepository.AddAsync(cooperation);
+                    await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
+                    var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
+                    result.Data = cooperationResult;
+                    result.Code = Status.Success;
+                }
             }
             catch (Exception ex)
             {
@@ -64,23 +85,33 @@ namespace RabeenApi.Services.Implementations
             UpdateCooperationRequest request)
         {
             var result = new BaseResult<AssociationCooperationResult>();
+            var validator = new UpdateCooperationRequestValidator();
             try
             {
-                var cooperation = await _cooperationRepository.GetAsync(request.Id);
-                if (cooperation is null)
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
                 {
-                    result.Code = Status.CooperationNotFound;
-                    result.ErrorMessage = $"Cooperation with id {request.Id} not found";
+                    result.Code = Status.NotValid;
+                    result.ErrorMessage = validationResult.ToString("~");
                 }
                 else
                 {
-                    _mapper.Map(request, cooperation);
-                    await _cooperationRepository.UpdateAsync(cooperation);
-                    await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
+                    var cooperation = await _cooperationRepository.GetAsync(request.Id);
+                    if (cooperation is null)
+                    {
+                        result.Code = Status.CooperationNotFound;
+                        result.ErrorMessage = $"Cooperation with id {request.Id} not found";
+                    }
+                    else
+                    {
+                        _mapper.Map(request, cooperation);
+                        await _cooperationRepository.UpdateAsync(cooperation);
+                        await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
 
-                    var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
-                    result.Data = cooperationResult;
-                    result.Code = Status.Success;
+                        var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
+                        result.Data = cooperationResult;
+                        result.Code = Status.Success;
+                    }
                 }
             }
             catch (Exception ex)

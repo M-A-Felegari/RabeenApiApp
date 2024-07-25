@@ -4,6 +4,7 @@ using RabeenApi.Dtos;
 using RabeenApi.Dtos.ContactMessage.Requests;
 using RabeenApi.Dtos.ContactMessage.Results;
 using RabeenApi.Repositories;
+using RabeenApi.Validators.ContactMessage;
 
 namespace RabeenApi.Services.Implementations;
 
@@ -16,15 +17,24 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
         GetAllContactMessagesRequest request)
     {
         var result = new BaseResult<List<ContactMessageInfoResult>>();
+        var validator = new GetAllContactMessagesRequestValidator();
         try
         {
-            var messages = await _contactMessageRepository
-                .GetLastsByPagination(request.PageNumber, request.PageLength);
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
+            }
+            else
+            {
+                var messages = await _contactMessageRepository
+                    .GetLastsByPagination(request.PageNumber, request.PageLength);
 
-            var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
-            result.Code = Status.Success;
-            result.Data = messageInfoResults;
-
+                var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
+                result.Code = Status.Success;
+                result.Data = messageInfoResults;
+            }
         }
         catch (Exception ex)
         {
@@ -39,16 +49,26 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
         AddContactMessageRequest request)
     {
         var result = new BaseResult<ContactMessageInfoResult>();
+        var validator = new AddContactMessageRequestValidator();
         try
         {
-            var message = _mapper.Map<ContactMessage>(request);
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
+            }
+            else
+            {
+                var message = _mapper.Map<ContactMessage>(request);
 
-            var addedMessage = await _contactMessageRepository.AddAsync(message);
-            
-            var addedMessageResult = _mapper.Map<ContactMessageInfoResult>(addedMessage);
-            
-            result.Code = Status.Success;
-            result.Data = addedMessageResult;
+                var addedMessage = await _contactMessageRepository.AddAsync(message);
+
+                var addedMessageResult = _mapper.Map<ContactMessageInfoResult>(addedMessage);
+
+                result.Code = Status.Success;
+                result.Data = addedMessageResult;
+            }
         }
         catch (Exception ex)
         {
