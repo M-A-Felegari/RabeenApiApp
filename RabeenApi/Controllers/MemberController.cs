@@ -11,19 +11,34 @@ namespace RabeenApi.Controllers;
 [ApiController]
 [Route("[Controller]")]
 public class MemberController(MemberService memberService,
-    ActionResultHandlersFactory handlersFactory) : ControllerBase
+    ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
     private readonly MemberService _memberService  = memberService;
-    private readonly ActionResultHandlersFactory _handlersFactory = handlersFactory;
 
     [HttpGet("all-main-members")]
-    public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> AllMainMembers()
+    public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> AllMainMembersAsync()
     {
         var result = await _memberService.GetAllMainMembersAsync();
 
         return GetActionResultToReturn(result);
     }
+    
+    [HttpGet("all")]
+    public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> GetAllMembersAsync()
+    {
+        var result = await _memberService.GetAllMembersAsync();
 
+        return GetActionResultToReturn(result);
+    }
+
+    [HttpGet("info")]
+    public async Task<ActionResult<BaseResult<MemberInfoResult>>> GetMemberInfoAsync(GetMemberInformationRequest request)
+    {
+        var result = await _memberService.GetMemberInformationAsync(request);
+
+        return GetActionResultToReturn(result);
+    }
+    
     [HttpPost("add")]
     public async Task<ActionResult<BaseResult<MemberInfoResult>>> Add(AddMemberRequest request)
     {
@@ -48,6 +63,13 @@ public class MemberController(MemberService memberService,
         return GetActionResultToReturn(result);
     }
     
+    [HttpPut("update")]
+    public async Task<ActionResult<BaseResult<MemberInfoResult>>> AllMainMembers(UpdateMemberInfoRequest request)
+    {
+        var result = await _memberService.UpdateMemberInfoAsync(request);
+
+        return GetActionResultToReturn(result);
+    }
     [HttpPost("add-achievement-to-member")]
     public async Task<ActionResult<BaseResult<List<AchievementResult>>>> Add(
         AddAchievementToExistMemberRequest request)
@@ -56,11 +78,12 @@ public class MemberController(MemberService memberService,
 
         return GetActionResultToReturn(result);
     }
-
-    private ActionResult GetActionResultToReturn<T>(BaseResult<T> result)
+    
+    [HttpDelete("delete")]
+    public async Task<ActionResult<BaseResult<object>>> AllMainMembers(DeleteMemberRequest request)
     {
-        var actionResult = _handlersFactory.GetHandler(result.Code);
+        var result = await _memberService.DeleteMemberAsync(request);
 
-        return actionResult is not null ? actionResult.Handle(result) : StatusCode(500, result);
+        return GetActionResultToReturn(result);
     }
 }

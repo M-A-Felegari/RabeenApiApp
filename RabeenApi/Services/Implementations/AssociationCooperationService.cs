@@ -8,7 +8,7 @@ using RabeenApi.Validators.AssociationCooperation;
 
 namespace RabeenApi.Services.Implementations
 {
-    public class AssociationCooperationServiceAssociationCooperationService(
+    public class AssociationCooperationService(
         IAssociationCooperationRepository cooperationRepository,
         IFileSaver fileSaver,
         IMapper mapper

@@ -60,7 +60,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
         return result;
     }
 
-    public async Task<BaseResult<MemberInfoResult>> GetMemberInformation(GetMemberInformationRequest request)
+    public async Task<BaseResult<MemberInfoResult>> GetMemberInformationAsync(GetMemberInformationRequest request)
     {
         var result = new BaseResult<MemberInfoResult>();
         try

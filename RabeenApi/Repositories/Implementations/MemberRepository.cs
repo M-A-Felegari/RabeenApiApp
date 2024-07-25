@@ -12,7 +12,7 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
         var member = await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
         if (member is null)
             throw new KeyNotFoundException("this member is not existing");
-        
+
         member.IsMainMember = isPrimary;
         await _context.SaveChangesAsync();
 
@@ -21,7 +21,7 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
 
     public async Task<List<Member>> GetAllMainMembersAsync()
     {
-        var members = await _context.Members.Where(m=>m.IsMainMember).ToListAsync();
+        var members = await _context.Members.Where(m => m.IsMainMember).ToListAsync();
         return members;
     }
 
@@ -32,7 +32,7 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
         if (member is null)
             throw new KeyNotFoundException($"member with id {memberId} not found");
         //todo: test if there isn't any achievement don't throw exception
-        return member.Achievements.ToList();
+        return member.Achievements is not null ? member.Achievements.ToList() : [];
     }
 
     public async Task<Member> AddAchievementToMemberAsync(int memberId, Achievement achievement)
@@ -43,11 +43,11 @@ public class MemberRepository(DataContext context) : GenericRepository<Member>(c
             throw new KeyNotFoundException($"member with id {memberId} not found");
 
         var achievementsList = member.Achievements is not null ? member.Achievements.ToList() : [];
-        
+
         achievementsList.Add(achievement);
 
         member.Achievements = achievementsList;
-        
+
         _context.Update(member);
         await _context.SaveChangesAsync();
 
