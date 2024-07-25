@@ -9,6 +9,6 @@ public enum Status
     MemberIsNotMain,
     AchievementNotFound = 20,
     ContactMessageNotFound = 30,
-    AssociationNotFound=40,
+    AssociationNotFound = 40,
     CooperationNotFound = 50
 }
