@@ -15,7 +15,8 @@ public class ContactMessageController(ContactMessageService contactMessageServic
     private readonly ContactMessageService _contactMessageService = contactMessageService;
 
     [HttpGet("all-messages")]
-    public async Task<ActionResult<BaseResult<List<ContactMessageInfoResult>>>> GetAllMessagesAsync(GetAllContactMessagesRequest request)
+    public async Task<ActionResult<BaseResult<List<ContactMessageInfoResult>>>> GetAllMessagesAsync(
+        [FromQuery] GetAllContactMessagesRequest request)
     {
         var result = await _contactMessageService.GetAllMessagesAsync(request);
 
@@ -31,7 +32,7 @@ public class ContactMessageController(ContactMessageService contactMessageServic
     }
 
     [HttpDelete("delete-message")]
-    public async Task<ActionResult<BaseResult<object>>> DeleteMessageAsync(DeleteContactMessageRequest request)
+    public async Task<ActionResult<BaseResult<object>>> DeleteMessageAsync([FromQuery] DeleteContactMessageRequest request)
     {
         var result = await _contactMessageService.DeleteMessageAsync(request);
 

@@ -15,7 +15,8 @@ public class AssociationCooperationController(AssociationCooperationService coop
     private readonly AssociationCooperationService _cooperationService = cooperationService;
 
     [HttpGet("all-cooperations")]
-    public async Task<ActionResult<BaseResult<List<AssociationCooperationResult>>>> GetAllCooperationsAsync(GetAllAssociationCooperationsRequest request)
+    public async Task<ActionResult<BaseResult<List<AssociationCooperationResult>>>> GetAllCooperationsAsync(
+        [FromQuery] GetAllAssociationCooperationsRequest request)
     {
         var result = await _cooperationService.GetAllCooperationsAsync(request);
 
@@ -39,7 +40,7 @@ public class AssociationCooperationController(AssociationCooperationService coop
     }
 
     [HttpDelete("delete-cooperation")]
-    public async Task<ActionResult<BaseResult<object>>> DeleteCooperationAsync(DeleteCooperationRequest request)
+    public async Task<ActionResult<BaseResult<object>>> DeleteCooperationAsync([FromQuery] DeleteCooperationRequest request)
     {
         var result = await _cooperationService.DeleteCooperationAsync(request);
 

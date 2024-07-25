@@ -15,7 +15,8 @@ public class AssociationController(AssociationService associationService,
     private readonly AssociationService _associationService = associationService;
 
     [HttpGet("all")]
-    public async Task<ActionResult<BaseResult<List<AssociationInfoResult>>>> GetAllAsync(GetAllAssociationsRequest request)
+    public async Task<ActionResult<BaseResult<List<AssociationInfoResult>>>> GetAllAsync(
+        [FromQuery]GetAllAssociationsRequest request)
     {
         var result = await _associationService.GetAllAsync(request);
 
@@ -23,7 +24,8 @@ public class AssociationController(AssociationService associationService,
     }
 
     [HttpGet("info")]
-    public async Task<ActionResult<BaseResult<AssociationInfoResult>>> GetAssociationInfoAsync(GetAssociationRequest request)
+    public async Task<ActionResult<BaseResult<AssociationInfoResult>>> GetAssociationInfoAsync(
+        [FromQuery]GetAssociationRequest request)
     {
         var result = await _associationService.GetAssociationInfoAsync(request);
 
@@ -55,7 +57,7 @@ public class AssociationController(AssociationService associationService,
     }
 
     [HttpDelete("delete")]
-    public async Task<ActionResult<BaseResult<object>>> DeleteAssociationAsync(DeleteAssociationRequest request)
+    public async Task<ActionResult<BaseResult<object>>> DeleteAssociationAsync([FromQuery] DeleteAssociationRequest request)
     {
         var result = await _associationService.DeleteAssociationAsync(request);
 

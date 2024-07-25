@@ -23,7 +23,7 @@ public class AchievementController(AchievementService achievementService,
     }
 
     [HttpDelete("delete")]
-    public async Task<ActionResult<BaseResult<object>>> DeleteAchievementAsync(DeleteAchievementRequest request)
+    public async Task<ActionResult<BaseResult<object>>> DeleteAchievementAsync([FromQuery] DeleteAchievementRequest request)
     {
         var result = await _achievementService.DeleteAchievementAsync(request);
 

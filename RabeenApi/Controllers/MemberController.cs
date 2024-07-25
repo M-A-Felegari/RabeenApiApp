@@ -6,14 +6,16 @@ using RabeenApi.Dtos.Member.Requests;
 using RabeenApi.Dtos.Member.Results;
 using RabeenApi.Factories;
 using RabeenApi.Services.Implementations;
+
 namespace RabeenApi.Controllers;
 
 [ApiController]
 [Route("[Controller]")]
-public class MemberController(MemberService memberService,
+public class MemberController(
+    MemberService memberService,
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
-    private readonly MemberService _memberService  = memberService;
+    private readonly MemberService _memberService = memberService;
 
     [HttpGet("all-main-members")]
     public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> AllMainMembersAsync()
@@ -22,7 +24,7 @@ public class MemberController(MemberService memberService,
 
         return GetActionResultToReturn(result);
     }
-    
+
     [HttpGet("all")]
     public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> GetAllMembersAsync()
     {
@@ -32,13 +34,14 @@ public class MemberController(MemberService memberService,
     }
 
     [HttpGet("info")]
-    public async Task<ActionResult<BaseResult<MemberInfoResult>>> GetMemberInfoAsync(GetMemberInformationRequest request)
+    public async Task<ActionResult<BaseResult<MemberInfoResult>>> GetMemberInfoAsync(
+        [FromQuery] GetMemberInformationRequest request)
     {
         var result = await _memberService.GetMemberInformationAsync(request);
 
         return GetActionResultToReturn(result);
     }
-    
+
     [HttpPost("add")]
     public async Task<ActionResult<BaseResult<MemberInfoResult>>> Add(AddMemberRequest request)
     {
@@ -54,7 +57,7 @@ public class MemberController(MemberService memberService,
 
         return GetActionResultToReturn(result);
     }
-    
+
     [HttpPost("set-cv")]
     public async Task<ActionResult<BaseResult<object>>> SetCvAsync([FromForm] SetMemberCvRequest request)
     {
@@ -62,25 +65,26 @@ public class MemberController(MemberService memberService,
 
         return GetActionResultToReturn(result);
     }
-    
+
     [HttpPut("update")]
-    public async Task<ActionResult<BaseResult<MemberInfoResult>>> AllMainMembers(UpdateMemberInfoRequest request)
+    public async Task<ActionResult<BaseResult<MemberInfoResult>>> UpdateMemberAsync(UpdateMemberInfoRequest request)
     {
         var result = await _memberService.UpdateMemberInfoAsync(request);
 
         return GetActionResultToReturn(result);
     }
+
     [HttpPost("add-achievement-to-member")]
-    public async Task<ActionResult<BaseResult<List<AchievementResult>>>> Add(
+    public async Task<ActionResult<BaseResult<List<AchievementResult>>>> AddAchievementToMemberAsync(
         AddAchievementToExistMemberRequest request)
     {
         var result = await _memberService.AddAchievement(request);
 
         return GetActionResultToReturn(result);
     }
-    
+
     [HttpDelete("delete")]
-    public async Task<ActionResult<BaseResult<object>>> AllMainMembers(DeleteMemberRequest request)
+    public async Task<ActionResult<BaseResult<object>>> AllMainMembers([FromQuery] DeleteMemberRequest request)
     {
         var result = await _memberService.DeleteMemberAsync(request);
 

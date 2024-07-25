@@ -28,7 +28,6 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
 
             result.Code = Status.Success;
             result.Data = membersPreview;
-            throw new Exception();
         }
         catch (Exception ex)
         {
