@@ -59,6 +59,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
         return result;
     }
 
+    //changed
     public async Task<BaseResult<MemberInfoResult>> GetMemberInformationAsync(GetMemberInformationRequest request)
     {
         var result = new BaseResult<MemberInfoResult>();
@@ -78,8 +79,6 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
             }
             else
             {
-                var memberAchievements = await _memberRepository.GetMemberAchievementsAsync(member.Id);
-                member.Achievements = memberAchievements;
 
                 var memberInfo = _mapper.Map<MemberInfoResult>(member);
 
@@ -96,6 +95,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
         return result;
     }
 
+    //changed
     public async Task<BaseResult<MemberInfoResult>> AddNewMemberAsync(AddMemberRequest request)
     {
         var result = new BaseResult<MemberInfoResult>();
@@ -154,7 +154,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
                 }
                 else
                 {
-                    await _fileSaver.SaveFileAsync(request.Picture, $@"data\members-profile\{request.Id}.jpg");
+                    await _fileSaver.SaveFileAsync(request.Picture, $@"{FileSaver.SaveProfilePath}\{request.Id}.jpg");
                 }
             }
         }
@@ -190,7 +190,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
                 }
                 else
                 {
-                    await _fileSaver.SaveFileAsync(request.CvFile, $@"data\members-cv\{request.Id}.pdf");
+                    await _fileSaver.SaveFileAsync(request.CvFile, $@"{FileSaver.SaveCvPath}\{request.Id}.pdf");
                 }
             }
         }
@@ -260,6 +260,8 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
             else
             {
                 await _memberRepository.DeleteAsync(member);
+                _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveProfilePath}\{member.Id}.jpg");
+                _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveCvPath}\{member.Id}.pdf");
 
                 result.Code = Status.Success;
             }
@@ -269,47 +271,6 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
         }
-        return result;
-    }
-
-    public async Task<BaseResult<List<AchievementResult>>> AddAchievement(AddAchievementToExistMemberRequest request)
-    {
-        var result = new BaseResult<List<AchievementResult>>();
-        var validator = new AddAchievementToExistMemberRequestValidator();
-        try
-        {
-            var validationResult = await validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                result.Code = Status.NotValid;
-                result.ErrorMessage = validationResult.ToString("~");
-            }
-            else
-            {
-                var member = await _memberRepository.GetAsync(request.MemberId);
-
-                if (member is null)
-                {
-                    result.Code = Status.MemberNotFound;
-                    result.ErrorMessage = $"member with id {request.MemberId} not found";
-                }
-                else
-                {
-                    var achievement = _mapper.Map<Achievement>(request);
-                    var updatedMember = await _memberRepository.AddAchievementToMemberAsync(member.Id, achievement);
-                    var achievementResults = _mapper.Map<List<AchievementResult>>(updatedMember.Achievements);
-
-                    result.Code = Status.Success;
-                    result.Data = achievementResults;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            result.Code = Status.ExceptionThrown;
-            result.ErrorMessage = ex.Message;
-        }
-
         return result;
     }
 }

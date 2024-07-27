@@ -12,15 +12,18 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
 
     public async Task<List<T>> GetAllAsync()
     {
-        var result = await _context.Set<T>().ToListAsync();
+        var result = await _context.Set<T>()
+            .AsNoTracking()
+            .ToListAsync();
         return result;
     }
     
     public async Task<List<T>> GetLastsByPagination(int pageNumber, int pageLength)
     {
         var messages = await _context.Set<T>()
+            .AsNoTracking()
             .OrderByDescending(c => c.Id)
-            .Skip(pageNumber * pageLength)
+            .Skip((pageNumber - 1) * pageLength)
             .Take(pageLength)
             .ToListAsync();
 
@@ -30,7 +33,10 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
 
     public async Task<T?> GetAsync(int id)
     {
-        var result = await _context.Set<T>().FirstOrDefaultAsync(m => m.Id == id);
+        var result = await _context.Set<T>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == id);
+        
         return result;
     }
 

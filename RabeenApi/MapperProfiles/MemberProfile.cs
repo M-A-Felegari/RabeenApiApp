@@ -20,9 +20,7 @@ public class MemberProfile : Profile
                 src.Name,
                 src.Title,
                 src.About,
-                src.IsMainMember,
-                src.Achievements != null ?
-                    context.Mapper.Map<List<AchievementResult>>(src.Achievements) : []
+                src.IsMainMember
             ));
 
         CreateMap<Member, MemberPreviewResult>()

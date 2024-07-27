@@ -14,6 +14,23 @@ public class AchievementController(AchievementService achievementService,
 {
     private readonly AchievementService _achievementService = achievementService;
 
+    [HttpGet]
+    public async Task<ActionResult<BaseResult<List<AchievementResult>>>> GetAll([FromQuery] GetAchievementsRequest request)
+    {
+        var result = await _achievementService.GetAll(request);
+
+        return GetActionResultToReturn(result);
+    }
+    
+    [HttpPost("add")]
+    public async Task<ActionResult<BaseResult<List<AchievementResult>>>> AddAchievementToMemberAsync(
+        AddAchievementRequest request)
+    {
+        var result = await _achievementService.AddAchievement(request);
+
+        return GetActionResultToReturn(result);
+    }
+
     [HttpPost("update")]
     public async Task<ActionResult<BaseResult<AchievementResult>>> UpdateAchievementAsync(UpdateAchievementRequest request)
     {

@@ -7,6 +7,5 @@ public record MemberInfoResult(
     string Name,
     string Title,
     string About,
-    bool IsMain,
-    List<AchievementResult> Achievments
+    bool IsMainMember
     );

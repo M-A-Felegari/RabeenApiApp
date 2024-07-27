@@ -1,5 +1,6 @@
 #outputs
 RabeenApi/bin
 RabeenApi/obj
+RabeenApi/data
 DataAccess/bin
 DataAccess/obj

@@ -12,4 +12,17 @@ public class DataContext : DbContext
     public DbSet<Association> Associations { get; set; }
     public DbSet<AssociationCooperation> AssociationCooperations { get; set; }
     public DbSet<ContactMessage> ContactMessages { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Member>()
+            .HasMany(m => m.Achievements)
+            .WithOne(a => a.Owner)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Association>()
+            .HasMany(a => a.Cooprations)
+            .WithOne(c => c.Association)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

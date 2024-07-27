@@ -19,8 +19,5 @@ public class UpdateCooperationRequestValidator:AbstractValidator<UpdateCooperati
         RuleFor(cooperation => cooperation.FinishDate)
             .LessThanOrEqualTo(DateTime.Now)
             .GreaterThan(cooperation => cooperation.StartDate);
-
-        RuleFor(cooperation => cooperation.Image)
-            .NotNull();
     }
 }

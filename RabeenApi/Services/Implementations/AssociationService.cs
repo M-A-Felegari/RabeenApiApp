@@ -162,7 +162,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                 }
                 else
                 {
-                    await _fileSaver.SaveFileAsync(request.Logo, $@"data\association-logos\{association.Id}.jpg");
+                    await _fileSaver.SaveFileAsync(request.Logo, $@"{FileSaver.SaveAssociationLogoPath}\{association.Id}.jpg");
                     result.Code = Status.Success;
                 }
             }
@@ -191,6 +191,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             {
                 //todo: first delete the cooperations
                 await _associationRepository.DeleteAsync(association.Id);
+                _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveAssociationLogoPath}\{association.Id}.jpg");
                 result.Code = Status.Success;
             }
         }

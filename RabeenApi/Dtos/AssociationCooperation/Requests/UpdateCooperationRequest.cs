@@ -6,5 +6,5 @@ public record UpdateCooperationRequest(
     string Description,
     DateTime StartDate,
     DateTime FinishDate,
-    IFormFile Image
+    IFormFile? Image
 );

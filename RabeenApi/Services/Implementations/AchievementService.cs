@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Achievement.Requests;
 using RabeenApi.Dtos.Achievement.Results;
@@ -7,10 +8,85 @@ using RabeenApi.Validators.Achievement;
 
 namespace RabeenApi.Services.Implementations;
 
-public class AchievementService(IAchievementRepository achievementRepository, IMapper mapper)
+public class AchievementService(
+    IAchievementRepository achievementRepository,
+    IMapper mapper,
+    IMemberRepository memberRepository)
 {
+    private readonly IMemberRepository _memberRepository = memberRepository;
     private readonly IAchievementRepository _achievementRepository = achievementRepository;
     private readonly IMapper _mapper = mapper;
+
+    public async Task<BaseResult<List<AchievementResult>>> GetAll(GetAchievementsRequest request)
+    {
+        var result = new BaseResult<List<AchievementResult>>();
+        try
+        {
+            var member = await _memberRepository.GetAsync(request.MemberId);
+
+            if (member is null)
+            {
+                result.Code = Status.MemberNotFound;
+                result.ErrorMessage = $"member with id {request.MemberId} not found";
+            }
+            else
+            {
+                var achievements = await _achievementRepository.GetMemberAchievementsAsync(member.Id);
+                var achievementResults = _mapper.Map<List<AchievementResult>>(achievements);
+
+                result.Code = Status.Success;
+                result.Data = achievementResults;
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
+        return result;
+    }
+
+    public async Task<BaseResult<List<AchievementResult>>> AddAchievement(AddAchievementRequest request)
+    {
+        var result = new BaseResult<List<AchievementResult>>();
+        var validator = new AddAchievementToExistMemberRequestValidator();
+        try
+        {
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                result.Code = Status.NotValid;
+                result.ErrorMessage = validationResult.ToString("~");
+            }
+            else
+            {
+                var member = await _memberRepository.GetAsync(request.MemberId);
+
+                if (member is null)
+                {
+                    result.Code = Status.MemberNotFound;
+                    result.ErrorMessage = $"member with id {request.MemberId} not found";
+                }
+                else
+                {
+                    var achievement = _mapper.Map<Achievement>(request);
+                    var achievements = await _achievementRepository.AddAchievementToMemberAsync(member.Id, achievement);
+                    var achievementResults = _mapper.Map<List<AchievementResult>>(achievements);
+
+                    result.Code = Status.Success;
+                    result.Data = achievementResults;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Code = Status.ExceptionThrown;
+            result.ErrorMessage = ex.Message;
+        }
+
+        return result;
+    }
 
     public async Task<BaseResult<AchievementResult>> UpdateAchievementAsync(UpdateAchievementRequest request)
     {
@@ -34,6 +110,8 @@ public class AchievementService(IAchievementRepository achievementRepository, IM
                 }
                 else
                 {
+                    achievement = _mapper.Map<Achievement>(request);
+                    await _achievementRepository.UpdateAsync(achievement);
                     var achievementResult = _mapper.Map<AchievementResult>(achievement);
                     result.Data = achievementResult;
                     result.Code = Status.Success;

@@ -3,7 +3,7 @@ using RabeenApi.Dtos.Achievement.Requests;
 
 namespace RabeenApi.Validators.Achievement;
 
-public class AddAchievementToExistMemberRequestValidator : AbstractValidator<AddAchievementToExistMemberRequest>
+public class AddAchievementToExistMemberRequestValidator : AbstractValidator<AddAchievementRequest>
 {
     public AddAchievementToExistMemberRequestValidator()
     {

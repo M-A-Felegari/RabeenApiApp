@@ -74,15 +74,6 @@ public class MemberController(
         return GetActionResultToReturn(result);
     }
 
-    [HttpPost("add-achievement-to-member")]
-    public async Task<ActionResult<BaseResult<List<AchievementResult>>>> AddAchievementToMemberAsync(
-        AddAchievementToExistMemberRequest request)
-    {
-        var result = await _memberService.AddAchievement(request);
-
-        return GetActionResultToReturn(result);
-    }
-
     [HttpDelete("delete")]
     public async Task<ActionResult<BaseResult<object>>> AllMainMembers([FromQuery] DeleteMemberRequest request)
     {

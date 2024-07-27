@@ -16,9 +16,16 @@ builder.Services.AddScoped<ActionResultHandlersFactory>();
 
 builder.Services.AddScoped<MemberService>();
 builder.Services.AddScoped<AchievementService>();
+builder.Services.AddScoped<AssociationService>();
+builder.Services.AddScoped<AssociationCooperationService>();
+builder.Services.AddScoped<ContactMessageService>();
 builder.Services.AddScoped<IFileSaver, FileSaver>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
+builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
+builder.Services.AddScoped<IAssociationCooperationRepository, AssociationCooperationRepository>();
+builder.Services.AddScoped<IContactMessageRepository, ContactMessageRepository>();
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

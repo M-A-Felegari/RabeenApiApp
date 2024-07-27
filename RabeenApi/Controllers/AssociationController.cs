@@ -49,7 +49,7 @@ public class AssociationController(AssociationService associationService,
     }
 
     [HttpPost("set-logo")]
-    public async Task<ActionResult<BaseResult<object>>> SetAssociationLogoAsync(SetAssociationLogoRequest request)
+    public async Task<ActionResult<BaseResult<object>>> SetAssociationLogoAsync([FromForm] SetAssociationLogoRequest request)
     {
         var result = await _associationService.SetAssociationLogoAsync(request);
 

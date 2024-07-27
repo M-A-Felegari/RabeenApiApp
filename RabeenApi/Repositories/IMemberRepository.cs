@@ -4,8 +4,6 @@ namespace RabeenApi.Repositories;
 
 public interface IMemberRepository : IGenericRepository<Member>
 {
-    public Task<Member> ChangeMemberPrimaryAsync(int id, bool isPrimary);
     public Task<List<Member>> GetAllMainMembersAsync();
-    public Task<List<Achievement>> GetMemberAchievementsAsync(int memberId);
-    public Task<Member> AddAchievementToMemberAsync(int memberId, Achievement achievement);
+
 }

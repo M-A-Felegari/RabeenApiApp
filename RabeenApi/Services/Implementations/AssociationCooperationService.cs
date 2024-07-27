@@ -66,7 +66,8 @@ namespace RabeenApi.Services.Implementations
                 {
                     var cooperation = _mapper.Map<AssociationCooperation>(request);
                     await _cooperationRepository.AddAsync(cooperation);
-                    await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
+                    await _fileSaver
+                        .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
                     var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
                     result.Data = cooperationResult;
                     result.Code = Status.Success;
@@ -96,19 +97,24 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var cooperation = await _cooperationRepository.GetAsync(request.Id);
-                    if (cooperation is null)
+                    var existingCooperation = await _cooperationRepository.GetAsync(request.Id);
+                    if (existingCooperation is null)
                     {
                         result.Code = Status.CooperationNotFound;
                         result.ErrorMessage = $"Cooperation with id {request.Id} not found";
                     }
                     else
                     {
-                        cooperation = _mapper.Map<AssociationCooperation>(request);
-                        await _cooperationRepository.UpdateAsync(cooperation);
-                        await _fileSaver.SaveFileAsync(request.Image, $@"data\cooperation-images\{cooperation.Id}.jpg");
+                        var updatedCooperation = _mapper.Map<AssociationCooperation>(request);
+                        updatedCooperation.AssociationId = existingCooperation.AssociationId; 
+                        //if we don't do this it's association id will be 0 and thrown an axception
+                        
+                        await _cooperationRepository.UpdateAsync(updatedCooperation);
+                        if (request.Image is not null)
+                             await _fileSaver
+                                .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{existingCooperation.Id}.jpg");
 
-                        var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
+                        var cooperationResult = _mapper.Map<AssociationCooperationResult>(updatedCooperation);
                         result.Data = cooperationResult;
                         result.Code = Status.Success;
                     }
@@ -137,6 +143,7 @@ namespace RabeenApi.Services.Implementations
                 else
                 {
                     await _cooperationRepository.DeleteAsync(request.Id);
+                    _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
                     result.Code = Status.Success;
                 }
             }

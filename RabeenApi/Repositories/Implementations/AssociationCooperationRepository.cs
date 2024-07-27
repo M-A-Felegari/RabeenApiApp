@@ -17,7 +17,7 @@ public class AssociationCooperationRepository(DataContext context) : GenericRepo
             throw new KeyNotFoundException($"association with id {associationId} not found");
 
         var cooperations = association.Cooprations
-            .Skip(pageLength * pageNumber)
+            .Skip(pageLength * (pageNumber - 1))
             .Take(pageLength)
             .ToList();
 

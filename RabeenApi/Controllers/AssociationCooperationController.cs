@@ -24,7 +24,7 @@ public class AssociationCooperationController(AssociationCooperationService coop
     }
 
     [HttpPost("add-cooperation")]
-    public async Task<ActionResult<BaseResult<AssociationCooperationResult>>> AddCooperationAsync(AddCooperationRequest request)
+    public async Task<ActionResult<BaseResult<AssociationCooperationResult>>> AddCooperationAsync([FromForm] AddCooperationRequest request)
     {
         var result = await _cooperationService.AddCooperationAsync(request);
 
@@ -32,7 +32,7 @@ public class AssociationCooperationController(AssociationCooperationService coop
     }
 
     [HttpPut("update-cooperation")]
-    public async Task<ActionResult<BaseResult<AssociationCooperationResult>>> UpdateCooperationAsync(UpdateCooperationRequest request)
+    public async Task<ActionResult<BaseResult<AssociationCooperationResult>>> UpdateCooperationAsync([FromForm] UpdateCooperationRequest request)
     {
         var result = await _cooperationService.UpdateCooperationAsync(request);
 

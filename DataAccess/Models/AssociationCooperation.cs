@@ -6,4 +6,6 @@ public class AssociationCooperation : BaseModel
     public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime FinishDate { get; set; }
+    public Association Association { get; set; }
+    public int AssociationId { get; set; }
 }

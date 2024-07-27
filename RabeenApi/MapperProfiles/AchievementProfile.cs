@@ -11,7 +11,7 @@ public class AchievementProfile : Profile
     {
         CreateMap<AddAchievementRequest, Achievement>();
         
-        CreateMap<AddAchievementToExistMemberRequest, Achievement>();
+        CreateMap<UpdateAchievementRequest, Achievement>();
             
         
         CreateMap<Achievement, AchievementResult>()
