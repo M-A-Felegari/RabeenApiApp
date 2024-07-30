@@ -15,7 +15,7 @@ public class AssociationController(AssociationService associationService,
     private readonly AssociationService _associationService = associationService;
 
     [HttpGet("all")]
-    public async Task<ActionResult<BaseResult<List<AssociationInfoResult>>>> GetAllAsync(
+    public async Task<ActionResult<BaseResult<PaginatedResult<AssociationInfoResult>>>> GetAllAsync(
         [FromQuery]GetAllAssociationsRequest request)
     {
         var result = await _associationService.GetAllAsync(request);

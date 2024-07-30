@@ -13,13 +13,13 @@ public class ContactMessageController(ContactMessageService contactMessageServic
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
     private readonly ContactMessageService _contactMessageService = contactMessageService;
-
+    
     [HttpGet("all-messages")]
-    public async Task<ActionResult<BaseResult<List<ContactMessageInfoResult>>>> GetAllMessagesAsync(
+    public async Task<ActionResult<BaseResult<PaginatedResult<ContactMessageInfoResult>>>> GetAllMessagesAsync(
         [FromQuery] GetAllContactMessagesRequest request)
     {
         var result = await _contactMessageService.GetAllMessagesAsync(request);
-
+        
         return GetActionResultToReturn(result);
     }
 

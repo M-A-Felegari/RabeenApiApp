@@ -15,7 +15,7 @@ public class AssociationCooperationController(AssociationCooperationService coop
     private readonly AssociationCooperationService _cooperationService = cooperationService;
 
     [HttpGet("all-cooperations")]
-    public async Task<ActionResult<BaseResult<List<AssociationCooperationResult>>>> GetAllCooperationsAsync(
+    public async Task<ActionResult<BaseResult<PaginatedResult<AssociationCooperationResult>>>> GetAllCooperationsAsync(
         [FromQuery] GetAllAssociationCooperationsRequest request)
     {
         var result = await _cooperationService.GetAllCooperationsAsync(request);

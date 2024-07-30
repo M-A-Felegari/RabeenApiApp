@@ -18,6 +18,7 @@ public class ActionResultHandlersFactory
         _handlers.Add(Status.AssociationNotFound, new NotFoundResultHandler());
         _handlers.Add(Status.CooperationNotFound, new NotFoundResultHandler());
         _handlers.Add(Status.ExceptionThrown, new InternalErrorResultHandler());
+        _handlers.Add(Status.OutOfRangePage, new NotFoundResultHandler());
     }
 
     public IActionResultHandler? GetHandler(Status status)

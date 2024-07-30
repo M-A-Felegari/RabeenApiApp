@@ -13,10 +13,10 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
     private readonly IContactMessageRepository _contactMessageRepository = contactMessageRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<BaseResult<List<ContactMessageInfoResult>>> GetAllMessagesAsync(
+    public async Task<BaseResult<PaginatedResult<ContactMessageInfoResult>>> GetAllMessagesAsync(
         GetAllContactMessagesRequest request)
     {
-        var result = new BaseResult<List<ContactMessageInfoResult>>();
+        var result = new BaseResult<PaginatedResult<ContactMessageInfoResult>>();
         var validator = new GetAllContactMessagesRequestValidator();
         try
         {
@@ -28,12 +28,26 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
             }
             else
             {
-                var messages = await _contactMessageRepository
-                    .GetLastsByPagination(request.PageNumber, request.PageLength);
+                var totalPages = await _contactMessageRepository.CountAsync() / request.PageLength;
+                if (request.PageNumber > totalPages)
+                {
+                    result.Code = Status.OutOfRangePage;
+                    result.ErrorMessage = $"last page is {totalPages}";
+                }
+                else
+                {
+                    var messages = await _contactMessageRepository
+                        .GetLastsByPagination(request.PageNumber, request.PageLength);
 
-                var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
-                result.Code = Status.Success;
-                result.Data = messageInfoResults;
+                    var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
+                    result.Code = Status.Success;
+                    result.Data = new PaginatedResult<ContactMessageInfoResult>()
+                    {
+                        Items = messageInfoResults,
+                        CurrentPage = request.PageNumber,
+                        TotalPages = totalPages
+                    };
+                }
             }
         }
         catch (Exception ex)

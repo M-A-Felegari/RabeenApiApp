@@ -10,5 +10,6 @@ public enum Status
     AchievementNotFound = 20,
     ContactMessageNotFound = 30,
     AssociationNotFound = 40,
-    CooperationNotFound = 50
+    CooperationNotFound = 50,
+    OutOfRangePage = 100,
 }

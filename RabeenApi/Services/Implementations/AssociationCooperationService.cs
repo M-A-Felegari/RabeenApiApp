@@ -18,10 +18,10 @@ namespace RabeenApi.Services.Implementations
         private readonly IFileSaver _fileSaver = fileSaver;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<BaseResult<List<AssociationCooperationResult>>> GetAllCooperationsAsync(
+        public async Task<BaseResult<PaginatedResult<AssociationCooperationResult>>> GetAllCooperationsAsync(
             GetAllAssociationCooperationsRequest request)
         {
-            var result = new BaseResult<List<AssociationCooperationResult>>();
+            var result = new BaseResult<PaginatedResult<AssociationCooperationResult>>();
             var validator = new GetAllAssociationCooperationsRequestValidator();
             try
             {
@@ -33,12 +33,27 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var cooperations =
-                        await _cooperationRepository.GetAllByAssociationIdAsync(request.AssociationId,
-                            request.PageNumber, request.PageLength);
-                    var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
-                    result.Data = cooperationResults;
-                    result.Code = Status.Success;
+                    var totalPages = await _cooperationRepository.CountAsync() / request.PageLength;
+                    if (request.PageNumber > totalPages)
+                    {
+                        result.Code = Status.OutOfRangePage;
+                        result.ErrorMessage = $"last page is {totalPages}";
+                    }
+                    else
+                    {
+                        var cooperations =
+                            await _cooperationRepository.GetAllByAssociationIdAsync(request.AssociationId,
+                                request.PageNumber, request.PageLength);
+                        var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
+                        
+                        result.Code = Status.Success;
+                        result.Data = new PaginatedResult<AssociationCooperationResult>()
+                        {
+                            CurrentPage = request.PageNumber,
+                            TotalPages = totalPages,
+                            Items = cooperationResults
+                        };
+                    }
                 }
             }
             catch (Exception ex)

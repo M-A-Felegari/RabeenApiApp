@@ -40,6 +40,14 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
         return result;
     }
 
+    public async Task<int> CountAsync()
+    {
+        var totalItemsCount = await _context.Set<T>()
+            .CountAsync();
+        
+        return totalItemsCount;
+    }
+
     public async Task<T> AddAsync(T model)
     {
         var e = await _context.Set<T>().AddAsync(model);

@@ -14,9 +14,9 @@ public class AssociationService(IAssociationRepository associationRepository, IM
     private readonly IMapper _mapper = mapper;
     private readonly IFileSaver _fileSaver = fileSaver;
 
-    public async Task<BaseResult<List<AssociationInfoResult>>> GetAllAsync(GetAllAssociationsRequest request)
+    public async Task<BaseResult<PaginatedResult<AssociationInfoResult>>> GetAllAsync(GetAllAssociationsRequest request)
     {
-        var result = new BaseResult<List<AssociationInfoResult>>();
+        var result = new BaseResult<PaginatedResult<AssociationInfoResult>>();
         var validator = new GetAllAssociationsRequestValidator();
         try
         {
@@ -28,11 +28,26 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                var associations =
-                    await _associationRepository.GetLastsByPagination(request.PageNumber, request.PageLength);
-                var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
-                result.Data = associationResults;
-                result.Code = Status.Success;
+                var totalPages = await _associationRepository.CountAsync() / request.PageLength;
+                if (request.PageNumber > totalPages)
+                {
+                    result.Code = Status.OutOfRangePage;
+                    result.ErrorMessage = $"last page is {totalPages}";
+                }
+                else
+                {
+                    var associations =
+                        await _associationRepository.GetLastsByPagination(request.PageNumber, request.PageLength);
+                    var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
+                    
+                    result.Code = Status.Success;
+                    result.Data = new PaginatedResult<AssociationInfoResult>()
+                    {
+                        CurrentPage = request.PageNumber,
+                        TotalPages = totalPages,
+                        Items = associationResults
+                    };
+                }
             }
         }
         catch (Exception ex)
