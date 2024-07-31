@@ -1,7 +1,8 @@
-﻿namespace RabeenApi.Dtos.Member.Requests;
+﻿using System.Text.Json.Serialization;
+
+namespace RabeenApi.Dtos.Member.Requests;
 
 public record UpdateMemberInfoRequest(
-    int Id,
     string Name,
     string Title,
     bool IsMainMember,

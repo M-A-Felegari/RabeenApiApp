@@ -59,16 +59,16 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<AssociationInfoResult>> GetAssociationInfoAsync(GetAssociationRequest request)
+    public async Task<BaseResult<AssociationInfoResult>> GetAssociationInfoAsync(int id)
     {
         var result = new BaseResult<AssociationInfoResult>();
         try
         {
-            var association = await _associationRepository.GetAsync(request.Id);
+            var association = await _associationRepository.GetAsync(id);
             if (association is null)
             {
                 result.Code = Status.AssociationNotFound;
-                result.ErrorMessage = $"Association with id {request.Id} not found";
+                result.ErrorMessage = $"Association with id {id} not found";
             }
             else
             {
@@ -116,7 +116,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<AssociationInfoResult>> UpdateAssociationInfoAsync(UpdateAssociationRequest request)
+    public async Task<BaseResult<AssociationInfoResult>> UpdateAssociationInfoAsync(int id,UpdateAssociationRequest request)
     {
         var result = new BaseResult<AssociationInfoResult>();
         var validator = new UpdateAssociationRequestValidator();
@@ -130,11 +130,11 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                var association = await _associationRepository.GetAsync(request.Id);
+                var association = await _associationRepository.GetAsync(id);
                 if (association is null)
                 {
                     result.Code = Status.AssociationNotFound;
-                    result.ErrorMessage = $"Association with id {request.Id} not found";
+                    result.ErrorMessage = $"Association with id {id} not found";
                 }
                 else
                 {
@@ -155,7 +155,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<object>> SetAssociationLogoAsync(SetAssociationLogoRequest request)
+    public async Task<BaseResult<object>> SetAssociationLogoAsync(int id, SetAssociationLogoRequest request)
     {
         var result = new BaseResult<object>();
         var validator = new SetAssociationLogoRequestValidator();
@@ -169,11 +169,11 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                var association = await _associationRepository.GetAsync(request.Id);
+                var association = await _associationRepository.GetAsync(id);
                 if (association is null)
                 {
                     result.Code = Status.AssociationNotFound;
-                    result.ErrorMessage = $"Association with id {request.Id} not found";
+                    result.ErrorMessage = $"Association with id {id} not found";
                 }
                 else
                 {
@@ -191,16 +191,16 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<object>> DeleteAssociationAsync(DeleteAssociationRequest request)
+    public async Task<BaseResult<object>> DeleteAssociationAsync(int id)
     {
         var result = new BaseResult<object>();
         try
         {
-            var association = await _associationRepository.GetAsync(request.Id);
+            var association = await _associationRepository.GetAsync(id);
             if (association is null)
             {
                 result.Code = Status.AssociationNotFound;
-                result.ErrorMessage = $"Association with id {request.Id} not found";
+                result.ErrorMessage = $"Association with id {id} not found";
             }
             else
             {

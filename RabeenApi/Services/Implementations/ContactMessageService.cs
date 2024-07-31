@@ -93,21 +93,21 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
         return result;
     }
 
-    public async Task<BaseResult<object>> DeleteMessageAsync(DeleteContactMessageRequest request)
+    public async Task<BaseResult<object>> DeleteMessageAsync(int id)
     {
         var result = new BaseResult<object>();
         try
         {
-            var message = await _contactMessageRepository.GetAsync(request.Id);
+            var message = await _contactMessageRepository.GetAsync(id);
 
             if (message is null)
             {
                 result.Code = Status.ContactMessageNotFound;
-                result.ErrorMessage = $"message with id {request.Id} not found";
+                result.ErrorMessage = $"message with id {id} not found";
             }
             else
             {
-                await _contactMessageRepository.DeleteAsync(request.Id);
+                await _contactMessageRepository.DeleteAsync(message.Id);
                 result.Code = Status.Success;
             }
         }

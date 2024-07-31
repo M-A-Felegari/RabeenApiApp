@@ -1,3 +1,5 @@
-﻿namespace RabeenApi.Dtos.Achievement.Requests;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public record UpdateAchievementRequest(int Id, string Title, string Description, DateTime Date);
+namespace RabeenApi.Dtos.Achievement.Requests;
+
+public record UpdateAchievementRequest(string Title, string Description, DateTime Date);

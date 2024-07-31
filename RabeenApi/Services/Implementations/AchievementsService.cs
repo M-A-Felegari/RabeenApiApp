@@ -8,7 +8,7 @@ using RabeenApi.Validators.Achievement;
 
 namespace RabeenApi.Services.Implementations;
 
-public class AchievementService(
+public class AchievementsService(
     IAchievementRepository achievementRepository,
     IMapper mapper,
     IMemberRepository memberRepository)
@@ -17,17 +17,17 @@ public class AchievementService(
     private readonly IAchievementRepository _achievementRepository = achievementRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<BaseResult<List<AchievementResult>>> GetAll(GetAchievementsRequest request)
+    public async Task<BaseResult<List<AchievementResult>>> GetAll(int memberId)
     {
         var result = new BaseResult<List<AchievementResult>>();
         try
         {
-            var member = await _memberRepository.GetAsync(request.MemberId);
+            var member = await _memberRepository.GetAsync(memberId);
 
             if (member is null)
             {
                 result.Code = Status.MemberNotFound;
-                result.ErrorMessage = $"member with id {request.MemberId} not found";
+                result.ErrorMessage = $"member with id {memberId} not found";
             }
             else
             {
@@ -47,7 +47,7 @@ public class AchievementService(
         return result;
     }
 
-    public async Task<BaseResult<List<AchievementResult>>> AddAchievement(AddAchievementRequest request)
+    public async Task<BaseResult<List<AchievementResult>>> AddAchievement(int memberId,AddAchievementRequest request)
     {
         var result = new BaseResult<List<AchievementResult>>();
         var validator = new AddAchievementToExistMemberRequestValidator();
@@ -61,12 +61,12 @@ public class AchievementService(
             }
             else
             {
-                var member = await _memberRepository.GetAsync(request.MemberId);
+                var member = await _memberRepository.GetAsync(memberId);
 
                 if (member is null)
                 {
                     result.Code = Status.MemberNotFound;
-                    result.ErrorMessage = $"member with id {request.MemberId} not found";
+                    result.ErrorMessage = $"member with id {memberId} not found";
                 }
                 else
                 {
@@ -88,7 +88,7 @@ public class AchievementService(
         return result;
     }
 
-    public async Task<BaseResult<AchievementResult>> UpdateAchievementAsync(UpdateAchievementRequest request)
+    public async Task<BaseResult<AchievementResult>> UpdateAchievementAsync(int id,UpdateAchievementRequest request)
     {
         var result = new BaseResult<AchievementResult>();
         var validator = new UpdateAchievementRequestValidator();
@@ -102,11 +102,11 @@ public class AchievementService(
             }
             else
             {
-                var achievement = await _achievementRepository.GetAsync(request.Id);
+                var achievement = await _achievementRepository.GetAsync(id);
                 if (achievement is null)
                 {
                     result.Code = Status.AchievementNotFound;
-                    result.ErrorMessage = $"Achievement with id {request.Id} didn't found";
+                    result.ErrorMessage = $"Achievement with id {id} didn't found";
                 }
                 else
                 {
@@ -127,20 +127,20 @@ public class AchievementService(
         return result;
     }
 
-    public async Task<BaseResult<object>> DeleteAchievementAsync(DeleteAchievementRequest request)
+    public async Task<BaseResult<object>> DeleteAchievementAsync(int id)
     {
         var result = new BaseResult<object>();
         try
         {
-            var achievement = await _achievementRepository.GetAsync(request.Id);
+            var achievement = await _achievementRepository.GetAsync(id);
             if (achievement is null)
             {
                 result.Code = Status.AchievementNotFound;
-                result.ErrorMessage = $"Achievement with id {request.Id} didn't found";
+                result.ErrorMessage = $"Achievement with id {id} didn't found";
             }
             else
             {
-                await _achievementRepository.DeleteAsync(request.Id);
+                await _achievementRepository.DeleteAsync(achievement.Id);
                 result.Code = Status.Success;
             }
         }

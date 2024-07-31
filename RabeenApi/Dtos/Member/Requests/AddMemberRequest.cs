@@ -1,4 +1,5 @@
-﻿using RabeenApi.Dtos.Achievement.Requests;
+﻿using System.Text.Json.Serialization;
+using RabeenApi.Dtos.Achievement.Requests;
 
 namespace RabeenApi.Dtos.Member.Requests;
 

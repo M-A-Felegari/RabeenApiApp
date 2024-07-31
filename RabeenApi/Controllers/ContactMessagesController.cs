@@ -8,22 +8,22 @@ using RabeenApi.Services.Implementations;
 namespace RabeenApi.Controllers;
 
 [ApiController]
-[Route("[Controller]")]
-public class ContactMessageController(ContactMessageService contactMessageService,
+[Route("contact-messages")]
+public class ContactMessagesController(ContactMessageService contactMessageService,
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
     private readonly ContactMessageService _contactMessageService = contactMessageService;
     
-    [HttpGet("all-messages")]
+    [HttpGet()]
     public async Task<ActionResult<BaseResult<PaginatedResult<ContactMessageInfoResult>>>> GetAllMessagesAsync(
-        [FromQuery] GetAllContactMessagesRequest request)
+        GetAllContactMessagesRequest request)
     {
         var result = await _contactMessageService.GetAllMessagesAsync(request);
         
         return GetActionResultToReturn(result);
     }
 
-    [HttpPost("add-message")]
+    [HttpPost()]
     public async Task<ActionResult<BaseResult<ContactMessageInfoResult>>> AddMessageAsync(AddContactMessageRequest request)
     {
         var result = await _contactMessageService.AddMessageAsync(request);
@@ -31,10 +31,10 @@ public class ContactMessageController(ContactMessageService contactMessageServic
         return GetActionResultToReturn(result);
     }
 
-    [HttpDelete("delete-message")]
-    public async Task<ActionResult<BaseResult<object>>> DeleteMessageAsync([FromQuery] DeleteContactMessageRequest request)
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<BaseResult<object>>> DeleteMessageAsync(int id)
     {
-        var result = await _contactMessageService.DeleteMessageAsync(request);
+        var result = await _contactMessageService.DeleteMessageAsync(id);
 
         return GetActionResultToReturn(result);
     }

@@ -1,3 +1,10 @@
-﻿namespace RabeenApi.Dtos.Member.Results;
+﻿using System.Text.Json.Serialization;
 
-public record MemberPreviewResult(int Id,string Name,string Title,bool IsMainMember);
+namespace RabeenApi.Dtos.Member.Results;
+
+public record MemberPreviewResult(
+    int Id,
+    string Name,
+    string Title,
+    bool IsMainMember
+    );

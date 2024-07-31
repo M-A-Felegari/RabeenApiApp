@@ -1,4 +1,6 @@
-﻿namespace RabeenApi.Dtos;
+﻿using System.Text.Json.Serialization;
+
+namespace RabeenApi.Dtos;
 
 public class BaseResult<T>
 {

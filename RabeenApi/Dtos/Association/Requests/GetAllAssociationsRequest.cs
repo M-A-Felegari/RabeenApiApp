@@ -1,3 +1,11 @@
-﻿namespace RabeenApi.Dtos.Association.Requests;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public record GetAllAssociationsRequest(int PageNumber, int PageLength);
+namespace RabeenApi.Dtos.Association.Requests;
+
+public record GetAllAssociationsRequest
+{
+    [FromQuery(Name = "page")] public int PageNumber { get; init; }
+
+    [FromQuery(Name = "length")] public int PageLength { get; init; }
+
+}

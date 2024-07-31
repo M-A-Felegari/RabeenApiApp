@@ -1,3 +1,5 @@
-﻿namespace RabeenApi.Dtos.Member.Requests;
+﻿using System.Text.Json.Serialization;
 
-public record SetMemberCvRequest(int Id, IFormFile CvFile);
+namespace RabeenApi.Dtos.Member.Requests;
+
+public record SetMemberCvRequest(IFormFile CvFile);

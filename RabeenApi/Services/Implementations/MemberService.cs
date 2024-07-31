@@ -60,17 +60,17 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
     }
 
     //changed
-    public async Task<BaseResult<MemberInfoResult>> GetMemberInformationAsync(GetMemberInformationRequest request)
+    public async Task<BaseResult<MemberInfoResult>> GetMemberInformationAsync(int id)
     {
         var result = new BaseResult<MemberInfoResult>();
         try
         {
-            var member = await _memberRepository.GetAsync(request.Id);
+            var member = await _memberRepository.GetAsync(id);
 
             if (member is null)
             {
                 result.Code = Status.MemberNotFound;
-                result.ErrorMessage = $"member with id {request.Id} not found";
+                result.ErrorMessage = $"member with id {id} not found";
             }
             else if (!member.IsMainMember)
             {
@@ -129,7 +129,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
         return result;
     }
 
-    public async Task<BaseResult<object>> SetProfilePictureAsync(SetProfilePictureRequest request)
+    public async Task<BaseResult<object>> SetProfilePictureAsync(int id,SetProfilePictureRequest request)
     {
         var result = new BaseResult<object>();
         var validator = new SetProfilePictureRequestValidator();
@@ -145,16 +145,16 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
             {
 
 
-                var member = await _memberRepository.GetAsync(request.Id);
+                var member = await _memberRepository.GetAsync(id);
 
                 if (member is null)
                 {
                     result.Code = Status.MemberNotFound;
-                    result.ErrorMessage = $"member with id {request.Id} not found";
+                    result.ErrorMessage = $"member with id {id} not found";
                 }
                 else
                 {
-                    await _fileSaver.SaveFileAsync(request.Picture, $@"{FileSaver.SaveProfilePath}\{request.Id}.jpg");
+                    await _fileSaver.SaveFileAsync(request.Picture, $@"{FileSaver.SaveProfilePath}\{member.Id}.jpg");
                 }
             }
         }
@@ -167,7 +167,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
         return result;
     }
 
-    public async Task<BaseResult<object>> SetMemberCvAsync(SetMemberCvRequest request)
+    public async Task<BaseResult<object>> SetMemberCvAsync(int id, SetMemberCvRequest request)
     {
         var result = new BaseResult<object>();
         var validator = new SetMemberCvRequestValidator();
@@ -181,16 +181,16 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
             }
             else
             {
-                var member = await _memberRepository.GetAsync(request.Id);
+                var member = await _memberRepository.GetAsync(id);
 
                 if (member is null)
                 {
                     result.Code = Status.MemberNotFound;
-                    result.ErrorMessage = $"member with id {request.Id} not found";
+                    result.ErrorMessage = $"member with id {id} not found";
                 }
                 else
                 {
-                    await _fileSaver.SaveFileAsync(request.CvFile, $@"{FileSaver.SaveCvPath}\{request.Id}.pdf");
+                    await _fileSaver.SaveFileAsync(request.CvFile, $@"{FileSaver.SaveCvPath}\{member.Id}.pdf");
                 }
             }
         }
@@ -203,7 +203,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
         return result;
     }
     
-    public async Task<BaseResult<MemberInfoResult>> UpdateMemberInfoAsync(UpdateMemberInfoRequest request)
+    public async Task<BaseResult<MemberInfoResult>> UpdateMemberInfoAsync(int id, UpdateMemberInfoRequest request)
     {
         var result = new BaseResult<MemberInfoResult>();
         var validator = new UpdateMemberInfoRequestValidator();
@@ -217,12 +217,12 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
             }
             else
             {
-                var member = await _memberRepository.GetAsync(request.Id);
+                var member = await _memberRepository.GetAsync(id);
 
                 if (member is null)
                 {
                     result.Code = Status.MemberNotFound;
-                    result.ErrorMessage = $"member with id {request.Id} not found";
+                    result.ErrorMessage = $"member with id {id} not found";
                 }
                 else
                 {
@@ -246,16 +246,16 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
     }
 
     //object means we don't want to pass any data to this api response
-    public async Task<BaseResult<object>> DeleteMemberAsync(DeleteMemberRequest request)
+    public async Task<BaseResult<object>> DeleteMemberAsync(int id)
     {
         var result = new BaseResult<object>();
         try
         {
-            var member = await _memberRepository.GetAsync(request.MemberId);
+            var member = await _memberRepository.GetAsync(id);
             if (member is null)
             {
                 result.Code = Status.MemberNotFound;
-                result.ErrorMessage = $"member with id {request.MemberId} not found";
+                result.ErrorMessage = $"member with id {id} not found";
             }
             else
             {

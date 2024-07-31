@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ActionResultHandlersFactory>();
 
 builder.Services.AddScoped<MemberService>();
-builder.Services.AddScoped<AchievementService>();
+builder.Services.AddScoped<AchievementsService>();
 builder.Services.AddScoped<AssociationService>();
 builder.Services.AddScoped<AssociationCooperationService>();
 builder.Services.AddScoped<ContactMessageService>();
@@ -32,9 +32,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DataContext>(options=>
+builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-    );
+);
 
 var app = builder.Build();
 

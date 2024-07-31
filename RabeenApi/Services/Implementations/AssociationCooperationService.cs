@@ -10,16 +10,18 @@ namespace RabeenApi.Services.Implementations
 {
     public class AssociationCooperationService(
         IAssociationCooperationRepository cooperationRepository,
+        IAssociationRepository associationRepository,
         IFileSaver fileSaver,
         IMapper mapper
     )
     {
         private readonly IAssociationCooperationRepository _cooperationRepository = cooperationRepository;
+        private readonly IAssociationRepository _associationRepository = associationRepository;
         private readonly IFileSaver _fileSaver = fileSaver;
         private readonly IMapper _mapper = mapper;
 
         public async Task<BaseResult<PaginatedResult<AssociationCooperationResult>>> GetAllCooperationsAsync(
-            GetAllAssociationCooperationsRequest request)
+            int associationId, GetAllAssociationCooperationsRequest request)
         {
             var result = new BaseResult<PaginatedResult<AssociationCooperationResult>>();
             var validator = new GetAllAssociationCooperationsRequestValidator();
@@ -41,18 +43,27 @@ namespace RabeenApi.Services.Implementations
                     }
                     else
                     {
-                        var cooperations =
-                            await _cooperationRepository.GetAllByAssociationIdAsync(request.AssociationId,
-                                request.PageNumber, request.PageLength);
-                        var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
-                        
-                        result.Code = Status.Success;
-                        result.Data = new PaginatedResult<AssociationCooperationResult>()
+                        var association = await _associationRepository.GetAsync(associationId);
+                        if (association is null)
                         {
-                            CurrentPage = request.PageNumber,
-                            TotalPages = totalPages,
-                            Items = cooperationResults
-                        };
+                            result.Code = Status.AssociationNotFound;
+                            result.ErrorMessage = $"association with id {associationId} not found";
+                        }
+                        else
+                        {
+                            var cooperations = 
+                                await _cooperationRepository.GetAllByAssociationIdAsync(associationId,
+                                    request.PageNumber, request.PageLength);
+                            var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
+                        
+                            result.Code = Status.Success;
+                            result.Data = new PaginatedResult<AssociationCooperationResult>()
+                            {
+                                CurrentPage = request.PageNumber,
+                                TotalPages = totalPages,
+                                Items = cooperationResults
+                            };
+                        }
                     }
                 }
             }
@@ -65,7 +76,8 @@ namespace RabeenApi.Services.Implementations
             return result;
         }
 
-        public async Task<BaseResult<AssociationCooperationResult>> AddCooperationAsync(AddCooperationRequest request)
+        public async Task<BaseResult<AssociationCooperationResult>> AddCooperationAsync(int associationId,
+            AddCooperationRequest request)
         {
             var result = new BaseResult<AssociationCooperationResult>();
             var validator = new AddCooperationRequestValidator();
@@ -79,13 +91,23 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var cooperation = _mapper.Map<AssociationCooperation>(request);
-                    await _cooperationRepository.AddAsync(cooperation);
-                    await _fileSaver
-                        .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
-                    var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
-                    result.Data = cooperationResult;
-                    result.Code = Status.Success;
+                    var association = await _associationRepository.GetAsync(associationId);
+                    if (association is null)
+                    {
+                        result.Code = Status.AssociationNotFound;
+                        result.ErrorMessage = $"association with id {associationId} not found";
+                    }
+                    else
+                    {
+                        var cooperation = _mapper.Map<AssociationCooperation>(request);
+                        cooperation.AssociationId = associationId;
+                        await _cooperationRepository.AddAsync(cooperation);
+                        await _fileSaver
+                            .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
+                        var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
+                        result.Data = cooperationResult;
+                        result.Code = Status.Success;
+                    }
                 }
             }
             catch (Exception ex)
@@ -97,7 +119,7 @@ namespace RabeenApi.Services.Implementations
             return result;
         }
 
-        public async Task<BaseResult<AssociationCooperationResult>> UpdateCooperationAsync(
+        public async Task<BaseResult<AssociationCooperationResult>> UpdateCooperationAsync( int id,
             UpdateCooperationRequest request)
         {
             var result = new BaseResult<AssociationCooperationResult>();
@@ -112,11 +134,11 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var existingCooperation = await _cooperationRepository.GetAsync(request.Id);
+                    var existingCooperation = await _cooperationRepository.GetAsync(id);
                     if (existingCooperation is null)
                     {
                         result.Code = Status.CooperationNotFound;
-                        result.ErrorMessage = $"Cooperation with id {request.Id} not found";
+                        result.ErrorMessage = $"Cooperation with id {id} not found";
                     }
                     else
                     {
@@ -144,20 +166,20 @@ namespace RabeenApi.Services.Implementations
             return result;
         }
 
-        public async Task<BaseResult<object>> DeleteCooperationAsync(DeleteCooperationRequest request)
+        public async Task<BaseResult<object>> DeleteCooperationAsync(int id)
         {
             var result = new BaseResult<object>();
             try
             {
-                var cooperation = await _cooperationRepository.GetAsync(request.Id);
+                var cooperation = await _cooperationRepository.GetAsync(id);
                 if (cooperation is null)
                 {
                     result.Code = Status.CooperationNotFound;
-                    result.ErrorMessage = $"Cooperation with id {request.Id} not found";
+                    result.ErrorMessage = $"Cooperation with id {id} not found";
                 }
                 else
                 {
-                    await _cooperationRepository.DeleteAsync(request.Id);
+                    await _cooperationRepository.DeleteAsync(cooperation.Id);
                     _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
                     result.Code = Status.Success;
                 }
