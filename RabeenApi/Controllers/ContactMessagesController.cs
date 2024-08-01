@@ -16,7 +16,7 @@ public class ContactMessagesController(ContactMessageService contactMessageServi
     
     [HttpGet()]
     public async Task<ActionResult<BaseResult<PaginatedResult<ContactMessageInfoResult>>>> GetAllMessagesAsync(
-        GetAllContactMessagesRequest request)
+        PaginationRequest request)
     {
         var result = await _contactMessageService.GetAllMessagesAsync(request);
         

@@ -4,6 +4,7 @@ using RabeenApi.Dtos;
 using RabeenApi.Dtos.ContactMessage.Requests;
 using RabeenApi.Dtos.ContactMessage.Results;
 using RabeenApi.Repositories;
+using RabeenApi.Validators;
 using RabeenApi.Validators.ContactMessage;
 
 namespace RabeenApi.Services.Implementations;
@@ -14,10 +15,10 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
     private readonly IMapper _mapper = mapper;
 
     public async Task<BaseResult<PaginatedResult<ContactMessageInfoResult>>> GetAllMessagesAsync(
-        GetAllContactMessagesRequest request)
+        PaginationRequest request)
     {
         var result = new BaseResult<PaginatedResult<ContactMessageInfoResult>>();
-        var validator = new GetAllContactMessagesRequestValidator();
+        var validator = new PaginationRequestValidator();
         try
         {
             var validationResult = await validator.ValidateAsync(request);

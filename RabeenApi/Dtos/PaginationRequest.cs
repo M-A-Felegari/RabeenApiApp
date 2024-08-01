@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace RabeenApi.Dtos.AssociationCooperation.Requests;
+namespace RabeenApi.Dtos;
 
-public record GetAllAssociationCooperationsRequest
+public record PaginationRequest
 {
     [FromQuery(Name = "page")] public int PageNumber { get; init; }
 

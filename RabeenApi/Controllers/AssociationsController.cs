@@ -21,7 +21,7 @@ public class AssociationsController(
 
     [HttpGet()]
     public async Task<ActionResult<BaseResult<PaginatedResult<AssociationInfoResult>>>> GetAllAsync(
-        [FromQuery] GetAllAssociationsRequest request)
+        [FromQuery] PaginationRequest request)
     {
         var result = await _associationService.GetAllAsync(request);
 
@@ -73,7 +73,7 @@ public class AssociationsController(
 
     [HttpGet("{id:int}/cooperations")]
     public async Task<ActionResult<BaseResult<PaginatedResult<AssociationCooperationResult>>>> GetAllCooperationsAsync(
-        int id, [FromQuery] GetAllAssociationCooperationsRequest request)
+        int id, [FromQuery] PaginationRequest request)
     {
         var result = await _cooperationService.GetAllCooperationsAsync(id,request);
 

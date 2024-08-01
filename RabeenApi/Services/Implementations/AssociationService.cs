@@ -4,6 +4,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Association.Requests;
 using RabeenApi.Dtos.Association.Results;
+using RabeenApi.Validators;
 using RabeenApi.Validators.Association;
 
 namespace RabeenApi.Services.Implementations;
@@ -14,10 +15,10 @@ public class AssociationService(IAssociationRepository associationRepository, IM
     private readonly IMapper _mapper = mapper;
     private readonly IFileSaver _fileSaver = fileSaver;
 
-    public async Task<BaseResult<PaginatedResult<AssociationInfoResult>>> GetAllAsync(GetAllAssociationsRequest request)
+    public async Task<BaseResult<PaginatedResult<AssociationInfoResult>>> GetAllAsync(PaginationRequest request)
     {
         var result = new BaseResult<PaginatedResult<AssociationInfoResult>>();
-        var validator = new GetAllAssociationsRequestValidator();
+        var validator = new PaginationRequestValidator();
         try
         {
             var validationResult = await validator.ValidateAsync(request);

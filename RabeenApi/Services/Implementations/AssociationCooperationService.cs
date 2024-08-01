@@ -4,6 +4,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.AssociationCooperation.Requests;
 using RabeenApi.Dtos.AssociationCooperation.Results;
+using RabeenApi.Validators;
 using RabeenApi.Validators.AssociationCooperation;
 
 namespace RabeenApi.Services.Implementations
@@ -21,10 +22,10 @@ namespace RabeenApi.Services.Implementations
         private readonly IMapper _mapper = mapper;
 
         public async Task<BaseResult<PaginatedResult<AssociationCooperationResult>>> GetAllCooperationsAsync(
-            int associationId, GetAllAssociationCooperationsRequest request)
+            int associationId, PaginationRequest request)
         {
             var result = new BaseResult<PaginatedResult<AssociationCooperationResult>>();
-            var validator = new GetAllAssociationCooperationsRequestValidator();
+            var validator = new PaginationRequestValidator();
             try
             {
                 var validationResult = await validator.ValidateAsync(request);
