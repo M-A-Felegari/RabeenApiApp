@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Achievement.Requests;
 using RabeenApi.Dtos.Achievement.Results;
@@ -52,6 +53,7 @@ public class MembersController(
     }
 
     [HttpPost("{id:int}/achievements")]
+    [Authorize("OwnerPolicy")]
     public async Task<ActionResult<BaseResult<List<AchievementResult>>>> AddAchievementToMemberAsync(
         int id, AddAchievementRequest request)
     {
@@ -61,6 +63,7 @@ public class MembersController(
     }
 
     [HttpPost()]
+    [Authorize("OwnerPolicy")]
     public async Task<ActionResult<BaseResult<MemberInfoResult>>> Add(AddMemberRequest request)
     {
         var result = await _memberService.AddNewMemberAsync(request);
@@ -69,6 +72,7 @@ public class MembersController(
     }
 
     [HttpPost("{id:int}/set-profile")]
+    [Authorize("OwnerPolicy")]
     public async Task<ActionResult<BaseResult<object>>> SetProfileAsync(int id,
         [FromForm] SetProfilePictureRequest request)
     {
@@ -78,6 +82,7 @@ public class MembersController(
     }
 
     [HttpPost("{id:int}/set-cv")]
+    [Authorize("OwnerPolicy")]
     public async Task<ActionResult<BaseResult<object>>> SetCvAsync(int id, [FromForm] SetMemberCvRequest request)
     {
         var result = await _memberService.SetMemberCvAsync(id, request);
@@ -86,6 +91,7 @@ public class MembersController(
     }
 
     [HttpPut("{id:int}")]
+    [Authorize("OwnerPolicy")]
     public async Task<ActionResult<BaseResult<MemberInfoResult>>> UpdateMemberAsync(int id,
         UpdateMemberInfoRequest request)
     {
@@ -95,6 +101,7 @@ public class MembersController(
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize("OwnerPolicy")]
     public async Task<ActionResult<BaseResult<object>>> AllMainMembers(int id)
     {
         var result = await _memberService.DeleteMemberAsync(id);

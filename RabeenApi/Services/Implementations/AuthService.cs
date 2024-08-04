@@ -110,7 +110,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             audience: jwtSettings["Audience"],
             claims: new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             },
             expires: DateTime.Now.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"] ?? "60")),
