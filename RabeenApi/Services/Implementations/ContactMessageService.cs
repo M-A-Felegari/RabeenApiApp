@@ -29,7 +29,7 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
             }
             else
             {
-                var totalPages = await _contactMessageRepository.CountAsync() / request.PageLength;
+                var totalPages = await _contactMessageRepository.CountAsync() / request.PageLength + 1;
                 if (request.PageNumber > totalPages)
                 {
                     result.Code = Status.OutOfRangePage;

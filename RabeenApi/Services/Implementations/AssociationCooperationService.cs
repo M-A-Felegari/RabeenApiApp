@@ -36,7 +36,7 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var totalPages = await _cooperationRepository.CountAsync() / request.PageLength;
+                    var totalPages = await _cooperationRepository.CountAsync() / request.PageLength + 1;
                     if (request.PageNumber > totalPages)
                     {
                         result.Code = Status.OutOfRangePage;

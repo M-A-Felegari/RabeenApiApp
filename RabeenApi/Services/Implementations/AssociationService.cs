@@ -29,7 +29,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                var totalPages = await _associationRepository.CountAsync() / request.PageLength;
+                var totalPages = await _associationRepository.CountAsync() / request.PageLength + 1;
                 if (request.PageNumber > totalPages)
                 {
                     result.Code = Status.OutOfRangePage;
