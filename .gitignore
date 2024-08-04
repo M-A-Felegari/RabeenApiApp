@@ -4,3 +4,6 @@ RabeenApi/obj
 RabeenApi/data
 DataAccess/bin
 DataAccess/obj
+
+#ignore the important information
+RabeenApi/appsettings.json

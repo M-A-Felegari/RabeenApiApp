@@ -12,6 +12,7 @@ public class DataContext : DbContext
     public DbSet<Association> Associations { get; set; }
     public DbSet<AssociationCooperation> AssociationCooperations { get; set; }
     public DbSet<ContactMessage> ContactMessages { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

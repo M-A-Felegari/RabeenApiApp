@@ -10,7 +10,7 @@ public abstract class BaseControllerClass(ActionResultHandlersFactory handlersFa
 
         protected ActionResult GetActionResultToReturn<T>(BaseResult<T> result)
         {
-            var actionResult = _handlersFactory.GetHandler(result.Code);
+            var actionResult = _handlersFactory.Create(result.Code);
 
             return actionResult is not null ? actionResult.Handle(result) : StatusCode(500, result);
         }

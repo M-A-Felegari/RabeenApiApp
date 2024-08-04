@@ -17,10 +17,12 @@ public class ActionResultHandlersFactory
         _handlers.Add(Status.ContactMessageNotFound, new NotFoundResultHandler());
         _handlers.Add(Status.AssociationNotFound, new NotFoundResultHandler());
         _handlers.Add(Status.CooperationNotFound, new NotFoundResultHandler());
+        _handlers.Add(Status.UserAlreadyExist, new ConflictResultHandler());
+        _handlers.Add(Status.UnAuthorizedUser, new UnAuthorizedResultHandler());
         _handlers.Add(Status.ExceptionThrown, new InternalErrorResultHandler());
         _handlers.Add(Status.OutOfRangePage, new NotFoundResultHandler());
     }
 
-    public IActionResultHandler? GetHandler(Status status)
+    public IActionResultHandler? Create(Status status)
         => _handlers.GetValueOrDefault(status);
 }

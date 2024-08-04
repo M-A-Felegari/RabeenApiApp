@@ -2,14 +2,18 @@
 
 public enum Status
 {
-    ExceptionThrown = -1,
-    Success = 0,
-    NotValid,
-    MemberNotFound = 10,
-    MemberIsNotMain,
-    AchievementNotFound = 20,
-    ContactMessageNotFound = 30,
-    AssociationNotFound = 40,
-    CooperationNotFound = 50,
-    OutOfRangePage = 100,
+    //here [added] means "this enum item added to ActionResultHandler factory and handled its own action result to create"
+    
+    ExceptionThrown = -1, //added
+    Success = 0, //added
+    NotValid = 1, //added
+    MemberNotFound = 10, //added
+    MemberIsNotMain = 11, //added
+    AchievementNotFound = 20, //added
+    ContactMessageNotFound = 30, //added
+    AssociationNotFound = 40, //added
+    CooperationNotFound = 50, //added
+    UserAlreadyExist = 61, //added
+    UnAuthorizedUser = 62, //added
+    OutOfRangePage = 100, //added
 }
