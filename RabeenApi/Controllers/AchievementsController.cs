@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Achievement.Requests;
 using RabeenApi.Dtos.Achievement.Results;
@@ -15,6 +16,7 @@ public class AchievementsController(AchievementsService achievementsService,
     private readonly AchievementsService _achievementsService = achievementsService;
 
     [HttpPut("{id:int}")]
+    [Authorize("Manager")]
     public async Task<ActionResult<BaseResult<AchievementResult>>> UpdateAchievementAsync(int id,
         UpdateAchievementRequest request)
     {
@@ -24,6 +26,7 @@ public class AchievementsController(AchievementsService achievementsService,
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize("Manager")]
     public async Task<ActionResult<BaseResult<object>>> DeleteAchievementAsync(int id)
     {
         var result = await _achievementsService.DeleteAchievementAsync(id);

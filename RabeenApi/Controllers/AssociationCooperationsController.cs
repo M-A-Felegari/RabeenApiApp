@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.AssociationCooperation.Requests;
 using RabeenApi.Dtos.AssociationCooperation.Results;
@@ -16,6 +17,7 @@ public class AssociationCooperationsController(AssociationCooperationService coo
     
 
     [HttpPut("{id:int}")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<AssociationCooperationResult>>> UpdateCooperationAsync(int id,
         [FromForm] UpdateCooperationRequest request)
     {
@@ -25,6 +27,7 @@ public class AssociationCooperationsController(AssociationCooperationService coo
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<object>>> DeleteCooperationAsync(int id)
     {
         var result = await _cooperationService.DeleteCooperationAsync(id);

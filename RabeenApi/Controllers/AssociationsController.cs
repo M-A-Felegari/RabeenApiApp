@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Association.Requests;
 using RabeenApi.Dtos.Association.Results;
@@ -37,6 +38,7 @@ public class AssociationsController(
     }
 
     [HttpPost()]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<AssociationInfoResult>>> AddAssociationAsync(
         AddAssociationRequest request)
     {
@@ -46,6 +48,7 @@ public class AssociationsController(
     }
 
     [HttpPut("{id:int}")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<AssociationInfoResult>>> UpdateAssociationInfoAsync(int id,
         UpdateAssociationRequest request)
     {
@@ -55,6 +58,7 @@ public class AssociationsController(
     }
 
     [HttpPost("{id:int}/set-logo")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<object>>> SetAssociationLogoAsync(int id,
         [FromForm] SetAssociationLogoRequest request)
     {
@@ -64,6 +68,7 @@ public class AssociationsController(
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<object>>> DeleteAssociationAsync(int id)
     {
         var result = await _associationService.DeleteAssociationAsync(id);
@@ -81,6 +86,7 @@ public class AssociationsController(
     }
 
     [HttpPost("{id:int}/cooperations")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<AssociationCooperationResult>>> AddCooperationAsync( int id,
         [FromForm] AddCooperationRequest request)
     {

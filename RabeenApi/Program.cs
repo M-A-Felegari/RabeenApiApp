@@ -59,8 +59,9 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("OwnerPolicy", policy => policy.RequireRole("Manager"))
-    .AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    .AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"))
+    .AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"))
+    .AddPolicy("ManagerOrAdminPolicy", policy => policy.RequireRole("Manager", "Admin"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

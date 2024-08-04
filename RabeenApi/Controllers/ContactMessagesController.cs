@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.ContactMessage.Requests;
 using RabeenApi.Dtos.ContactMessage.Results;
@@ -15,6 +16,7 @@ public class ContactMessagesController(ContactMessageService contactMessageServi
     private readonly ContactMessageService _contactMessageService = contactMessageService;
     
     [HttpGet()]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<PaginatedResult<ContactMessageInfoResult>>>> GetAllMessagesAsync(
         PaginationRequest request)
     {
@@ -32,6 +34,7 @@ public class ContactMessagesController(ContactMessageService contactMessageServi
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<object>>> DeleteMessageAsync(int id)
     {
         var result = await _contactMessageService.DeleteMessageAsync(id);
