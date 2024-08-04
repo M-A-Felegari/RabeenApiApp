@@ -12,7 +12,7 @@ using RabeenApi.Validators.User;
 
 namespace RabeenApi.Services.Implementations;
 
-public class AuthService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper)
+public class AuthService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper) : IAuthService
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IConfiguration _configuration = configuration;

@@ -11,7 +11,7 @@ using RabeenApi.Validators.Member;
 
 namespace RabeenApi.Services.Implementations;
 
-public class MemberService(IMemberRepository memberRepository, IMapper mapper,IFileSaver fileSaver)
+public class MemberService(IMemberRepository memberRepository, IMapper mapper,IFileSaver fileSaver) : IMemberService
 {
     private readonly IMemberRepository _memberRepository = memberRepository;
     private readonly IMapper _mapper = mapper;

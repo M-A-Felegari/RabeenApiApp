@@ -14,7 +14,7 @@ namespace RabeenApi.Services.Implementations
         IAssociationRepository associationRepository,
         IFileSaver fileSaver,
         IMapper mapper
-    )
+    ) : IAssociationCooperationService
     {
         private readonly IAssociationCooperationRepository _cooperationRepository = cooperationRepository;
         private readonly IAssociationRepository _associationRepository = associationRepository;

@@ -9,7 +9,7 @@ using RabeenApi.Validators.ContactMessage;
 
 namespace RabeenApi.Services.Implementations;
 
-public class ContactMessageService(IContactMessageRepository contactMessageRepository, IMapper mapper)
+public class ContactMessageService(IContactMessageRepository contactMessageRepository, IMapper mapper) : IContactMessageService
 {
     private readonly IContactMessageRepository _contactMessageRepository = contactMessageRepository;
     private readonly IMapper _mapper = mapper;

@@ -9,7 +9,7 @@ using RabeenApi.Validators.Association;
 
 namespace RabeenApi.Services.Implementations;
 
-public class AssociationService(IAssociationRepository associationRepository, IMapper mapper, IFileSaver fileSaver)
+public class AssociationService(IAssociationRepository associationRepository, IMapper mapper, IFileSaver fileSaver) : IAssociationService
 {
     private readonly IAssociationRepository _associationRepository = associationRepository;
     private readonly IMapper _mapper = mapper;

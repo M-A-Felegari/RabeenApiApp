@@ -11,7 +11,7 @@ namespace RabeenApi.Services.Implementations;
 public class AchievementsService(
     IAchievementRepository achievementRepository,
     IMapper mapper,
-    IMemberRepository memberRepository)
+    IMemberRepository memberRepository) : IAchievementsService
 {
     private readonly IMemberRepository _memberRepository = memberRepository;
     private readonly IAchievementRepository _achievementRepository = achievementRepository;
