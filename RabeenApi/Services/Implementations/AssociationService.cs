@@ -139,9 +139,12 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                 }
                 else
                 {
-                    association = _mapper.Map<Association>(request);
-                    await _associationRepository.UpdateAsync(association);
-                    var associationResult = _mapper.Map<AssociationInfoResult>(association);
+                    var updatedAssociation = _mapper.Map<Association>(request);
+                    updatedAssociation.Id = association.Id;
+                    await _associationRepository.UpdateAsync(updatedAssociation);
+                    
+                    var associationResult = _mapper.Map<AssociationInfoResult>(updatedAssociation);
+                    
                     result.Data = associationResult;
                     result.Code = Status.Success;
                 }

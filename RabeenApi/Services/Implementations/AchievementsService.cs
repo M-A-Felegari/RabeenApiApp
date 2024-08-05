@@ -110,9 +110,12 @@ public class AchievementsService(
                 }
                 else
                 {
-                    achievement = _mapper.Map<Achievement>(request);
-                    await _achievementRepository.UpdateAsync(achievement);
-                    var achievementResult = _mapper.Map<AchievementResult>(achievement);
+                    var updatedAchievement = _mapper.Map<Achievement>(request);
+                    updatedAchievement.Id = achievement.Id;
+                    await _achievementRepository.UpdateAsync(updatedAchievement);
+                    
+                    var achievementResult = _mapper.Map<AchievementResult>(updatedAchievement);
+                    
                     result.Data = achievementResult;
                     result.Code = Status.Success;
                 }

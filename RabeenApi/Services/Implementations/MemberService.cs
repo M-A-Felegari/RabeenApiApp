@@ -227,6 +227,7 @@ public class MemberService(IMemberRepository memberRepository, IMapper mapper,IF
                 else
                 {
                     var updatedMember = _mapper.Map<Member>(request);
+                    updatedMember.Id = member.Id;
                     await _memberRepository.UpdateAsync(updatedMember);
 
                     var memberInfo = _mapper.Map<MemberInfoResult>(updatedMember);

@@ -146,13 +146,17 @@ namespace RabeenApi.Services.Implementations
                         var updatedCooperation = _mapper.Map<AssociationCooperation>(request);
                         updatedCooperation.AssociationId = existingCooperation.AssociationId; 
                         //if we don't do this it's association id will be 0 and thrown an axception
+
+                        updatedCooperation.Id = existingCooperation.Id;
                         
                         await _cooperationRepository.UpdateAsync(updatedCooperation);
+                        
                         if (request.Image is not null)
                              await _fileSaver
                                 .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{existingCooperation.Id}.jpg");
 
                         var cooperationResult = _mapper.Map<AssociationCooperationResult>(updatedCooperation);
+                        
                         result.Data = cooperationResult;
                         result.Code = Status.Success;
                     }
