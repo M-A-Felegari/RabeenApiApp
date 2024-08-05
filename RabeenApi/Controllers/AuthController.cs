@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.ContactMessage.Results;
 using RabeenApi.Dtos.User.Requests;
@@ -15,6 +16,7 @@ public class AuthController(ActionResultHandlersFactory handlersFactory,AuthServ
 {
     private readonly AuthService _authService = authService;
     [HttpPost("signup")]
+    [Authorize("ManagerPolicy")]
     public async Task<ActionResult<BaseResult<UserTokenResult>>> SignupAsync(UserSignupRequest request)
     {
         var result = await _authService.SignUpAsync(request);
