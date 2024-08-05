@@ -20,7 +20,8 @@ public class MemberProfile : Profile
                 src.Name,
                 src.Title,
                 src.About,
-                src.IsMainMember
+                src.IsMainMember,
+                src.OwnPortfolio
             ));
 
         CreateMap<Member, MemberPreviewResult>()
@@ -28,7 +29,8 @@ public class MemberProfile : Profile
                 src.Id,
                 src.Name,
                 src.Title,
-                src.IsMainMember
+                src.IsMainMember,
+                src.OwnPortfolio
             ));
 
     }

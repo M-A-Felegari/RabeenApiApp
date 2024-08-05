@@ -8,5 +8,6 @@ public record MemberInfoResult(
     string Name,
     string Title,
     string About,
-     bool IsMainMember
+     bool IsMainMember,
+    string OwnPortfolio
     );

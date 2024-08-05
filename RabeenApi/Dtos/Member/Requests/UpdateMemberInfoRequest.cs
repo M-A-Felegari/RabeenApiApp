@@ -6,5 +6,6 @@ public record UpdateMemberInfoRequest(
     string Name,
     string Title,
     bool IsMainMember,
-    string About
+    string About,
+    string OwnPortfolio
     );

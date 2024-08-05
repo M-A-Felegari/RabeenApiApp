@@ -6,5 +6,6 @@ public record MemberPreviewResult(
     int Id,
     string Name,
     string Title,
-    bool IsMainMember
+    bool IsMainMember,
+    string OwnPortfolio
     );
