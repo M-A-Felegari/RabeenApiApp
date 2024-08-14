@@ -96,6 +96,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         return result;
     }
 
+
     private string GenerateJwtToken(User user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");

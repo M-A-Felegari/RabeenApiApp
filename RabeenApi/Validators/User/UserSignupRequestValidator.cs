@@ -11,7 +11,6 @@ public class UserSignupRequestValidator:AbstractValidator<UserSignupRequest>
             .Length(4, 20);
 
         RuleFor(s => s.Password)
-            .NotEmpty()
             .Length(8, 30);
 
         RuleFor(s => s.Role)

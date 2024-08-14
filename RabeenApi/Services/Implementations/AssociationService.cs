@@ -38,7 +38,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                 else
                 {
                     var associations =
-                        await _associationRepository.GetLastsByPagination(request.PageNumber, request.PageLength);
+                        await _associationRepository.GetSortedByTotalCooperations(request.PageNumber, request.PageLength);
                     var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
                     
                     result.Code = Status.Success;

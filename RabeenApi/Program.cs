@@ -33,7 +33,6 @@ builder.Services.AddScoped<IAssociationCooperationRepository, AssociationCoopera
 builder.Services.AddScoped<IContactMessageRepository, ContactMessageRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-
 builder.Services.AddAutoMapper(typeof(Program));
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -98,6 +97,19 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+const string AllOriginsAllowedPolicy = "AllOriginsAllowed";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AllOriginsAllowedPolicy,
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -122,6 +134,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(AllOriginsAllowedPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
