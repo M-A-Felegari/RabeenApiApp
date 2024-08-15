@@ -9,7 +9,8 @@ using RabeenApi.Validators.Association;
 
 namespace RabeenApi.Services.Implementations;
 
-public class AssociationService(IAssociationRepository associationRepository, IMapper mapper, IFileSaver fileSaver) : IAssociationService
+public class AssociationService(IAssociationRepository associationRepository, IMapper mapper, IFileSaver fileSaver)
+    : IAssociationService
 {
     private readonly IAssociationRepository _associationRepository = associationRepository;
     private readonly IMapper _mapper = mapper;
@@ -38,9 +39,21 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                 else
                 {
                     var associations =
-                        await _associationRepository.GetSortedByTotalCooperations(request.PageNumber, request.PageLength);
+                        await _associationRepository.GetSortedByTotalCooperations(request.PageNumber,
+                            request.PageLength);
                     var associationResults = _mapper.Map<List<AssociationInfoResult>>(associations);
-                    
+
+                    for (var i = 0; i < associationResults.Count; i++)
+                    {
+                        var totalCooperationsCount =
+                            await _associationRepository.CountTotalCooperationsAsync(associationResults[i].Id);
+
+                        associationResults[i] = associationResults[i] with
+                        {
+                            TotalCooperations = totalCooperationsCount
+                        };
+                    }
+
                     result.Code = Status.Success;
                     result.Data = new PaginatedResult<AssociationInfoResult>()
                     {
@@ -74,6 +87,9 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             else
             {
                 var associationResult = _mapper.Map<AssociationInfoResult>(association);
+                var totalCooperationsNumber = await _associationRepository.CountTotalCooperationsAsync(id);
+                associationResult = associationResult with { TotalCooperations = totalCooperationsNumber };
+
                 result.Data = associationResult;
                 result.Code = Status.Success;
             }
@@ -117,7 +133,8 @@ public class AssociationService(IAssociationRepository associationRepository, IM
         return result;
     }
 
-    public async Task<BaseResult<AssociationInfoResult>> UpdateAssociationInfoAsync(int id,UpdateAssociationRequest request)
+    public async Task<BaseResult<AssociationInfoResult>> UpdateAssociationInfoAsync(int id,
+        UpdateAssociationRequest request)
     {
         var result = new BaseResult<AssociationInfoResult>();
         var validator = new UpdateAssociationRequestValidator();
@@ -142,9 +159,9 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                     var updatedAssociation = _mapper.Map<Association>(request);
                     updatedAssociation.Id = association.Id;
                     await _associationRepository.UpdateAsync(updatedAssociation);
-                    
+
                     var associationResult = _mapper.Map<AssociationInfoResult>(updatedAssociation);
-                    
+
                     result.Data = associationResult;
                     result.Code = Status.Success;
                 }
@@ -181,7 +198,8 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                 }
                 else
                 {
-                    await _fileSaver.SaveFileAsync(request.Logo, $@"{FileSaver.SaveAssociationLogoPath}\{association.Id}.jpg");
+                    await _fileSaver.SaveFileAsync(request.Logo,
+                        $@"{FileSaver.SaveAssociationLogoPath}\{association.Id}.jpg");
                     result.Code = Status.Success;
                 }
             }

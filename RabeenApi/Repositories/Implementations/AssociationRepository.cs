@@ -18,4 +18,20 @@ public class AssociationRepository(DataContext context) : GenericRepository<Asso
 
         return associations;
     }
+
+    public async Task<int> CountTotalCooperationsAsync(int associationId)
+    {
+        var association = await _context
+            .Associations
+            .FindAsync(associationId);
+
+        if (association is null)
+            throw new NullReferenceException($"association with id {association} is null");
+
+        var cooperationsNumber = await _context
+            .AssociationCooperations
+            .CountAsync(c => c.AssociationId == associationId);
+
+        return cooperationsNumber;
+    }
 }

@@ -20,7 +20,8 @@ public class AssociationProfile : Profile
                 src.UniversityName,
                 src.ContactLink,
                 src.CreationDate,
-                src.FirstCooperationDate
+                src.FirstCooperationDate,
+                0
             ));
     }
 }

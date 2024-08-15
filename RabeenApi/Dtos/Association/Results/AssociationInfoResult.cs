@@ -6,5 +6,6 @@ public record AssociationInfoResult(
     string UniversityName,
     string ContactLink,
     DateTime CreationDate,
-    DateTime FirstCooperationDate
+    DateTime FirstCooperationDate,
+    int TotalCooperations
 );
