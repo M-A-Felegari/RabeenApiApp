@@ -16,7 +16,7 @@ public class AchievementsController(AchievementsService achievementsService,
     private readonly AchievementsService _achievementsService = achievementsService;
 
     [HttpPut("{id:int}")]
-    [Authorize("Manager")]
+    [Authorize("ManagerPolicy")]
     public async Task<ActionResult<BaseResult<AchievementResult>>> UpdateAchievementAsync(int id,
         UpdateAchievementRequest request)
     {
@@ -26,7 +26,7 @@ public class AchievementsController(AchievementsService achievementsService,
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize("Manager")]
+    [Authorize("ManagerPolicy")]
     public async Task<ActionResult<BaseResult<object>>> DeleteAchievementAsync(int id)
     {
         var result = await _achievementsService.DeleteAchievementAsync(id);
