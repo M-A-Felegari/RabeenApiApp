@@ -4,6 +4,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.AssociationCooperation.Requests;
 using RabeenApi.Dtos.AssociationCooperation.Results;
+using RabeenApi.Helpers;
 using RabeenApi.Validators;
 using RabeenApi.Validators.AssociationCooperation;
 
@@ -36,7 +37,8 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var totalPages = await _cooperationRepository.CountAsync() / request.PageLength + 1;
+                    var totalCooperations = await _cooperationRepository.CountAsync();
+                    var totalPages = PaginationHelper.CalculateTotalPages(totalCooperations, request.PageLength);
                     if (request.PageNumber > totalPages)
                     {
                         result.Code = Status.OutOfRangePage;

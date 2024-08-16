@@ -3,6 +3,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.ContactMessage.Requests;
 using RabeenApi.Dtos.ContactMessage.Results;
+using RabeenApi.Helpers;
 using RabeenApi.Repositories;
 using RabeenApi.Validators;
 using RabeenApi.Validators.ContactMessage;
@@ -29,7 +30,8 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
             }
             else
             {
-                var totalPages = await _contactMessageRepository.CountAsync() / request.PageLength + 1;
+                var totalMessages = await _contactMessageRepository.CountAsync();
+                var totalPages = PaginationHelper.CalculateTotalPages(totalMessages, request.PageLength);
                 if (request.PageNumber > totalPages)
                 {
                     result.Code = Status.OutOfRangePage;

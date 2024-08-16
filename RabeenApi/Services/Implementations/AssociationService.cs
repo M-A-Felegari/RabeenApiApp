@@ -4,6 +4,7 @@ using DataAccess.Models;
 using RabeenApi.Dtos;
 using RabeenApi.Dtos.Association.Requests;
 using RabeenApi.Dtos.Association.Results;
+using RabeenApi.Helpers;
 using RabeenApi.Validators;
 using RabeenApi.Validators.Association;
 
@@ -30,7 +31,8 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                var totalPages = await _associationRepository.CountAsync() / request.PageLength + 1;
+                var totalAssociations = await _associationRepository.CountAsync();
+                var totalPages = PaginationHelper.CalculateTotalPages(totalAssociations, request.PageLength);
                 if (request.PageNumber > totalPages)
                 {
                     result.Code = Status.OutOfRangePage;
