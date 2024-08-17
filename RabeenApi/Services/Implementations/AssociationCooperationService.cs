@@ -37,20 +37,21 @@ namespace RabeenApi.Services.Implementations
                 }
                 else
                 {
-                    var totalCooperations = await _cooperationRepository.CountAsync();
-                    var totalPages = PaginationHelper.CalculateTotalPages(totalCooperations, request.PageLength);
-                    if (request.PageNumber > totalPages)
+                    var association = await _associationRepository.GetAsync(associationId);
+                    if (association is null)
                     {
-                        result.Code = Status.OutOfRangePage;
-                        result.ErrorMessage = $"last page is {totalPages}";
+                        result.Code = Status.AssociationNotFound;
+                        result.ErrorMessage = $"association with id {associationId} not found";
                     }
                     else
                     {
-                        var association = await _associationRepository.GetAsync(associationId);
-                        if (association is null)
+                        var totalCooperations = await _associationRepository
+                            .CountTotalCooperationsAsync(association.Id);
+                        var totalPages = PaginationHelper.CalculateTotalPages(totalCooperations, request.PageLength);
+                        if (request.PageNumber > totalPages)
                         {
-                            result.Code = Status.AssociationNotFound;
-                            result.ErrorMessage = $"association with id {associationId} not found";
+                            result.Code = Status.OutOfRangePage;
+                            result.ErrorMessage = $"last page is {totalPages}";
                         }
                         else
                         {

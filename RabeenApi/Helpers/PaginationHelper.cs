@@ -7,6 +7,9 @@ public static class PaginationHelper
         if (pageLength <= 0)
             throw new ArgumentOutOfRangeException(nameof(pageLength), "pageLength cant be less then or equal to 1");
 
+        if (totalItems == 0)
+            return 0;
+        
         return totalItems / pageLength + (pageLength != 1 ? 1 : 0);
     }
 }
