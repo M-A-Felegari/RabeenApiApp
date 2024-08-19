@@ -10,6 +10,6 @@ public static class PaginationHelper
         if (totalItems == 0)
             return 0;
         
-        return totalItems / pageLength + (pageLength != 1 ? 1 : 0);
+        return (int)Math.Ceiling((double)totalItems / pageLength);
     }
 }
