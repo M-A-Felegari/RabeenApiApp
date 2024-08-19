@@ -17,8 +17,7 @@ public class AddMemberRequestValidator : AbstractValidator<AddMemberRequest>
             .MaximumLength(64);
 
         RuleFor(member => member.About)
-            .NotEmpty()
-            .MaximumLength(200)
+            .MaximumLength(1000)
             .When(member => member.IsMainMember); //this property is only for main members
         
     }

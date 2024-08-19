@@ -8,12 +8,14 @@ public class UpdateMemberInfoRequestValidator:AbstractValidator<UpdateMemberInfo
     public UpdateMemberInfoRequestValidator()
     {
         RuleFor(member => member.Name)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(64);
 
         RuleFor(member => member.Title)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(64);
 
         RuleFor(member => member.About)
-            .NotEmpty();
+            .MaximumLength(1000);
     }
 }
