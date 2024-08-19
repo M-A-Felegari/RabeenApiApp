@@ -1,7 +1,7 @@
 #outputs
 RabeenApi/bin
 RabeenApi/obj
-RabeenApi/data
+RabeenApi/wwwroot
 DataAccess/bin
 DataAccess/obj
 

@@ -2,10 +2,10 @@
 
 public class FileSaver : IFileSaver
 {
-    public static string SaveProfilePath { get; } = $@"data\members-profile";
-    public static string SaveCvPath{ get; } = $@"data\members-cv";
-    public static string SaveAssociationLogoPath { get; } = $@"data\associations-logo";
-    public static string SaveCooperationImagePath { get; } = $@"data\cooperation-image";
+    public static string SaveProfilePath { get; } = $@"wwwroot\members-profile";
+    public static string SaveCvPath{ get; } = $@"wwwroot\members-cv";
+    public static string SaveAssociationLogoPath { get; } = $@"wwwroot\associations-logo";
+    public static string SaveCooperationImagePath { get; } = $@"wwwroot\cooperation-image";
     public async Task SaveFileAsync(IFormFile file, string path)
     {
         CreateDirectoryIfNotExist(path);
