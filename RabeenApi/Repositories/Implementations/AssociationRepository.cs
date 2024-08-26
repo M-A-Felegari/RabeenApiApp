@@ -34,4 +34,21 @@ public class AssociationRepository(DataContext context) : GenericRepository<Asso
 
         return cooperationsNumber;
     }
+
+    public async Task<DateTime> GetFirstCooperationDateAsync(int associationId)
+    {
+        var association = await _context
+            .Associations
+            .FindAsync(associationId);
+
+        if (association is null)
+            throw new NullReferenceException($"association with id {association} is null");
+
+        var firstCooperation = await _context
+            .AssociationCooperations
+            .OrderByDescending(c=>c.StartDate)
+            .FirstOrDefaultAsync(c => c.AssociationId == associationId);
+
+        return firstCooperation?.StartDate ?? new DateTime();
+    }
 }

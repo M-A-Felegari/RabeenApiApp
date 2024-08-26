@@ -6,4 +6,5 @@ public interface IAssociationRepository : IGenericRepository<Association>
 {
     public Task<List<Association>> GetSortedByTotalCooperations(int page, int length);
     public Task<int> CountTotalCooperationsAsync(int associationId);
+    public Task<DateTime> GetFirstCooperationDateAsync(int associationId);
 }

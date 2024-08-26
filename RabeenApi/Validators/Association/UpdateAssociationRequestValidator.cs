@@ -18,8 +18,5 @@ public class UpdateAssociationRequestValidator:AbstractValidator<UpdateAssociati
 
         RuleFor(association => association.CreationDate)
             .LessThan(DateTime.Now);
-
-        RuleFor(association => association.FirstCooperationDate)
-            .LessThanOrEqualTo(DateTime.Now);
     }
 }

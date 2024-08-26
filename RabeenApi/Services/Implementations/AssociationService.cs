@@ -50,9 +50,13 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                         var totalCooperationsCount =
                             await _associationRepository.CountTotalCooperationsAsync(associationResults[i].Id);
 
+                        var firstCooperationDate =
+                            await _associationRepository.GetFirstCooperationDateAsync(associationResults[i].Id);
+                        
                         associationResults[i] = associationResults[i] with
                         {
-                            TotalCooperations = totalCooperationsCount
+                            TotalCooperations = totalCooperationsCount,
+                            FirstCooperationDate = firstCooperationDate
                         };
                     }
 
@@ -90,7 +94,12 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             {
                 var associationResult = _mapper.Map<AssociationInfoResult>(association);
                 var totalCooperationsNumber = await _associationRepository.CountTotalCooperationsAsync(id);
-                associationResult = associationResult with { TotalCooperations = totalCooperationsNumber };
+                var firstCooperationDate = await _associationRepository.GetFirstCooperationDateAsync(id);
+                associationResult = associationResult with
+                {
+                    TotalCooperations = totalCooperationsNumber,
+                    FirstCooperationDate = firstCooperationDate
+                };
 
                 result.Data = associationResult;
                 result.Code = Status.Success;
@@ -228,7 +237,6 @@ public class AssociationService(IAssociationRepository associationRepository, IM
             }
             else
             {
-                //todo: first delete the cooperations
                 await _associationRepository.DeleteAsync(association.Id);
                 _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveAssociationLogoPath}\{association.Id}.jpg");
                 result.Code = Status.Success;
