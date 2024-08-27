@@ -13,7 +13,7 @@ public class AddAchievementToExistMemberRequestValidator : AbstractValidator<Add
         RuleFor(achievement => achievement.Description)
             .NotEmpty();
 
-        RuleFor(achievement => achievement.Date)
-            .LessThanOrEqualTo(DateTime.Now);
+        RuleFor(achievement => achievement.ExtraInformation)
+            .Length(0,50);
     }
 }

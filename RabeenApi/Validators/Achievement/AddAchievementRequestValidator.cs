@@ -14,8 +14,7 @@ public class AddAchievementRequestValidator : AbstractValidator<AddAchievementRe
         RuleFor(achievement => achievement.Description)
             .NotEmpty();
 
-        RuleFor(achievement => achievement.Date)
-            .LessThanOrEqualTo(DateTime.Now)
-            .WithMessage("time must be in the past");
+        RuleFor(achievement => achievement.ExtraInformation)
+            .Length(0, 50);
     }
 }

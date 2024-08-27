@@ -19,7 +19,7 @@ public class AchievementProfile : Profile
                 src.Id,
                 src.Title,
                 src.Description,
-                src.Date
+                src.ExtraInformation
             ));
     }
 }

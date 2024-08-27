@@ -13,7 +13,7 @@ public class UpdateAchievementRequestValidator:AbstractValidator<UpdateAchieveme
         RuleFor(achievement => achievement.Description)
             .NotEmpty();
 
-        RuleFor(achievement => achievement.Date)
-            .LessThan(DateTime.Now);
+        RuleFor(achievement => achievement.ExtraInformation)
+            .Length(0,50);
     }
 }

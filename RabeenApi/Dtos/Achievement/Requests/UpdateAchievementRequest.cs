@@ -2,4 +2,4 @@
 
 namespace RabeenApi.Dtos.Achievement.Requests;
 
-public record UpdateAchievementRequest(string Title, string Description, DateTime Date);
+public record UpdateAchievementRequest(string Title, string Description, string ExtraInformation);
