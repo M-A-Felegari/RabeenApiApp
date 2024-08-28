@@ -44,7 +44,7 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
 
                     var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
                     result.Code = Status.Success;
-                    result.Data = new PaginatedResult<ContactMessageInfoResult>()
+                    result.Data = new PaginatedResult<ContactMessageInfoResult>
                     {
                         Items = messageInfoResults,
                         CurrentPage = request.PageNumber,

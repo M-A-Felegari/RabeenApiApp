@@ -17,7 +17,7 @@ public static class InitialUserSeeder
         var isOwnerExist = await userRepository.IsAlreadyUsedUsernameAsync(username);
         if (!isOwnerExist)
         {
-            var owner = new User()
+            var owner = new User
             {
                 Username = username,
                 Password = password,

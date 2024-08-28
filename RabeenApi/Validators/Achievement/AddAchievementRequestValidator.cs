@@ -7,7 +7,7 @@ public class AddAchievementRequestValidator : AbstractValidator<AddAchievementRe
 {
     public AddAchievementRequestValidator()
     {
-
+        
         RuleFor(achievement => achievement.Title)
             .NotEmpty();
 

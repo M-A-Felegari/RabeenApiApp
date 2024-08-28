@@ -15,5 +15,5 @@ public enum Status
     CooperationNotFound = 50, //added
     UserAlreadyExist = 61, //added
     UnAuthorizedUser = 62, //added
-    OutOfRangePage = 100, //added
+    OutOfRangePage = 100 //added
 }

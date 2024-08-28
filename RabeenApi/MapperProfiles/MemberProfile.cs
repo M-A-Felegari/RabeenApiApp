@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
-using RabeenApi.Dtos.Achievement.Results;
 using RabeenApi.Dtos.Member.Requests;
 using RabeenApi.Dtos.Member.Results;
 
@@ -15,7 +14,7 @@ public class MemberProfile : Profile
         CreateMap<UpdateMemberInfoRequest, Member>();
         
         CreateMap<Member, MemberInfoResult>()
-            .ConstructUsing((src,context) => new MemberInfoResult(
+            .ConstructUsing((src) => new MemberInfoResult(
                 src.Id,
                 src.Name,
                 src.Title,

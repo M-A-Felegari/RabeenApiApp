@@ -76,7 +76,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
                 if (user is null)
                 {
                     result.Code = Status.UnAuthorizedUser;
-                    result.ErrorMessage = $"username or password is incorrect";
+                    result.ErrorMessage = "username or password is incorrect";
                 }
                 else
                 {

@@ -4,18 +4,19 @@ using RabeenApi.Dtos;
 using RabeenApi.Dtos.ContactMessage.Requests;
 using RabeenApi.Dtos.ContactMessage.Results;
 using RabeenApi.Factories;
+using RabeenApi.Services;
 using RabeenApi.Services.Implementations;
 
 namespace RabeenApi.Controllers;
 
 [ApiController]
 [Route("contact-messages")]
-public class ContactMessagesController(ContactMessageService contactMessageService,
+public class ContactMessagesController(IContactMessageService contactMessageService,
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
-    private readonly ContactMessageService _contactMessageService = contactMessageService;
+    private readonly IContactMessageService _contactMessageService = contactMessageService;
     
-    [HttpGet()]
+    [HttpGet]
     [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<PaginatedResult<ContactMessageInfoResult>>>> GetAllMessagesAsync(
         PaginationRequest request)
@@ -25,7 +26,7 @@ public class ContactMessagesController(ContactMessageService contactMessageServi
         return GetActionResultToReturn(result);
     }
 
-    [HttpPost()]
+    [HttpPost]
     public async Task<ActionResult<BaseResult<ContactMessageInfoResult>>> AddMessageAsync(AddContactMessageRequest request)
     {
         var result = await _contactMessageService.AddMessageAsync(request);

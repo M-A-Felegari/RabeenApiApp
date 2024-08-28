@@ -6,6 +6,7 @@ using RabeenApi.Dtos.Achievement.Results;
 using RabeenApi.Dtos.Member.Requests;
 using RabeenApi.Dtos.Member.Results;
 using RabeenApi.Factories;
+using RabeenApi.Services;
 using RabeenApi.Services.Implementations;
 
 namespace RabeenApi.Controllers;
@@ -13,12 +14,12 @@ namespace RabeenApi.Controllers;
 [ApiController]
 [Route("members")]
 public class MembersController(
-    MemberService memberService,
-    AchievementsService achievementsService,
+    IMemberService memberService,
+    IAchievementsService achievementsService,
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
-    private readonly MemberService _memberService = memberService;
-    private readonly AchievementsService _achievementsService = achievementsService;
+    private readonly IMemberService _memberService = memberService;
+    private readonly IAchievementsService _achievementsService = achievementsService;
 
     [HttpGet("all-main-members")]
     public async Task<ActionResult<BaseResult<List<MemberPreviewResult>>>> AllMainMembersAsync()
@@ -62,7 +63,7 @@ public class MembersController(
         return GetActionResultToReturn(result);
     }
 
-    [HttpPost()]
+    [HttpPost]
     [Authorize("ManagerPolicy")]
     public async Task<ActionResult<BaseResult<MemberInfoResult>>> Add(AddMemberRequest request)
     {

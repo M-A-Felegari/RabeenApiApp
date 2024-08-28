@@ -61,7 +61,7 @@ public class AssociationService(IAssociationRepository associationRepository, IM
                     }
 
                     result.Code = Status.Success;
-                    result.Data = new PaginatedResult<AssociationInfoResult>()
+                    result.Data = new PaginatedResult<AssociationInfoResult>
                     {
                         CurrentPage = request.PageNumber,
                         TotalPages = totalPages,

@@ -6,6 +6,7 @@ using RabeenApi.Dtos.Association.Results;
 using RabeenApi.Dtos.AssociationCooperation.Requests;
 using RabeenApi.Dtos.AssociationCooperation.Results;
 using RabeenApi.Factories;
+using RabeenApi.Services;
 using RabeenApi.Services.Implementations;
 
 namespace RabeenApi.Controllers;
@@ -13,14 +14,14 @@ namespace RabeenApi.Controllers;
 [ApiController]
 [Route("associations")]
 public class AssociationsController(
-    AssociationService associationService,
-    AssociationCooperationService cooperationService,
+    IAssociationService associationService,
+    IAssociationCooperationService cooperationService,
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
-    private readonly AssociationService _associationService = associationService;
-    private readonly AssociationCooperationService _cooperationService = cooperationService;
+    private readonly IAssociationService _associationService = associationService;
+    private readonly IAssociationCooperationService _cooperationService = cooperationService;
 
-    [HttpGet()]
+    [HttpGet]
     public async Task<ActionResult<BaseResult<PaginatedResult<AssociationInfoResult>>>> GetAllAsync(
         [FromQuery] PaginationRequest request)
     {
@@ -37,7 +38,7 @@ public class AssociationsController(
         return GetActionResultToReturn(result);
     }
 
-    [HttpPost()]
+    [HttpPost]
     [Authorize("ManagerOrAdminPolicy")]
     public async Task<ActionResult<BaseResult<AssociationInfoResult>>> AddAssociationAsync(
         AddAssociationRequest request)

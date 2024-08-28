@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace RabeenApi.Dtos.Member.Results;
+﻿namespace RabeenApi.Dtos.Member.Results;
 
 public record MemberPreviewResult(
     int Id,

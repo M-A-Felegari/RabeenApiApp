@@ -19,12 +19,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ActionResultHandlersFactory>();
 
-builder.Services.AddScoped<MemberService>();
-builder.Services.AddScoped<AchievementsService>();
-builder.Services.AddScoped<AssociationService>();
-builder.Services.AddScoped<AssociationCooperationService>();
-builder.Services.AddScoped<ContactMessageService>();
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IMemberService,MemberService>();
+builder.Services.AddScoped<IAchievementsService,AchievementsService>();
+builder.Services.AddScoped<IAssociationService,AssociationService>();
+builder.Services.AddScoped<IAssociationCooperationService ,AssociationCooperationService>();
+builder.Services.AddScoped<IContactMessageService,ContactMessageService>();
+builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IFileSaver, FileSaver>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
@@ -87,7 +87,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            []
         }
     });
 });

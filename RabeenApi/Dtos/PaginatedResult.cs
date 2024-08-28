@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace RabeenApi.Dtos;
+﻿namespace RabeenApi.Dtos;
 
 public class PaginatedResult<T>
 {

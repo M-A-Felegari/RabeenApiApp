@@ -1,6 +1,5 @@
 ﻿using DataAccess;
 using DataAccess.Models;
-using RabeenApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace RabeenApi.Repositories.Implementations;
@@ -50,7 +49,7 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
 
     public async Task<T> AddAsync(T model)
     {
-        var e = await _context.Set<T>().AddAsync(model);
+        await _context.Set<T>().AddAsync(model);
         await _context.SaveChangesAsync();
         return model;
     }
@@ -76,7 +75,7 @@ public class GenericRepository<T>(DataContext context) : IGenericRepository<T>
         }
         else
         {
-            throw new KeyNotFoundException($"{typeof(T).ToString()} with key {id} not found");
+            throw new KeyNotFoundException($"{typeof(T)} with key {id} not found");
         }
     }
 

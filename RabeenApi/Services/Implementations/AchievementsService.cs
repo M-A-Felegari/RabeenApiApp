@@ -50,7 +50,7 @@ public class AchievementsService(
     public async Task<BaseResult<List<AchievementResult>>> AddAchievement(int memberId,AddAchievementRequest request)
     {
         var result = new BaseResult<List<AchievementResult>>();
-        var validator = new AddAchievementToExistMemberRequestValidator();
+        var validator = new AddAchievementRequestValidator();
         try
         {
             var validationResult = await validator.ValidateAsync(request);

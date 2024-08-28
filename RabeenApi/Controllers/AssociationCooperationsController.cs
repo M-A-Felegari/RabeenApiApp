@@ -4,16 +4,17 @@ using RabeenApi.Dtos;
 using RabeenApi.Dtos.AssociationCooperation.Requests;
 using RabeenApi.Dtos.AssociationCooperation.Results;
 using RabeenApi.Factories;
+using RabeenApi.Services;
 using RabeenApi.Services.Implementations;
 
 namespace RabeenApi.Controllers;
 
 [ApiController]
 [Route("cooperations")]
-public class AssociationCooperationsController(AssociationCooperationService cooperationService,
+public class AssociationCooperationsController(IAssociationCooperationService cooperationService,
     ActionResultHandlersFactory handlersFactory) : BaseControllerClass(handlersFactory)
 {
-    private readonly AssociationCooperationService _cooperationService = cooperationService;
+    private readonly IAssociationCooperationService _cooperationService = cooperationService;
     
 
     [HttpPut("{id:int}")]
