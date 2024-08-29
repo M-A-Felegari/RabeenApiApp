@@ -8,10 +8,10 @@ public class UserSignupRequestValidator:AbstractValidator<UserSignupRequest>
     public UserSignupRequestValidator()
     {
         RuleFor(s => s.Username)
-            .Length(4, 20);
+            .Length(4, 32);
 
         RuleFor(s => s.Password)
-            .Length(8, 30);
+            .Length(8, 32);
 
         RuleFor(s => s.Role)
             .IsInEnum();

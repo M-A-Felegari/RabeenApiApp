@@ -8,10 +8,12 @@ public class UpdateAchievementRequestValidator:AbstractValidator<UpdateAchieveme
     public UpdateAchievementRequestValidator()
     {
         RuleFor(achievement => achievement.Title)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(100);
 
         RuleFor(achievement => achievement.Description)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(400);
 
         RuleFor(achievement => achievement.ExtraInformation)
             .Length(0,50);

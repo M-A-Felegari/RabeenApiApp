@@ -8,9 +8,9 @@ public class UserLoginRequestValidator:AbstractValidator<UserLoginRequest>
     public UserLoginRequestValidator()
     {
         RuleFor(l => l.Username)
-            .Length(4,20);
+            .Length(4,32);
 
         RuleFor(l => l.Password)
-            .Length(8, 30);
+            .Length(8, 32);
     }
 }

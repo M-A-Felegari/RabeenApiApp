@@ -8,13 +8,16 @@ public class AddAssociationRequestValidator : AbstractValidator<AddAssociationRe
     public AddAssociationRequestValidator()
     {
         RuleFor(association => association.Name)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(50);
 
         RuleFor(association => association.UniversityName)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(50);
 
         RuleFor(association => association.ContactLink)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(100);
 
         RuleFor(association => association.CreationDate)
             .LessThan(DateTime.Now);

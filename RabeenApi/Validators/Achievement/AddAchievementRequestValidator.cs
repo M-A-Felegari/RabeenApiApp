@@ -7,12 +7,14 @@ public class AddAchievementRequestValidator : AbstractValidator<AddAchievementRe
 {
     public AddAchievementRequestValidator()
     {
-        
+
         RuleFor(achievement => achievement.Title)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(100);
 
         RuleFor(achievement => achievement.Description)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(400);
 
         RuleFor(achievement => achievement.ExtraInformation)
             .Length(0, 50);

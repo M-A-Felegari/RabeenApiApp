@@ -9,15 +9,20 @@ public class AddMemberRequestValidator : AbstractValidator<AddMemberRequest>
     {
         RuleFor(member => member.Name)
             .NotEmpty()
-            .MaximumLength(64);
+            .MaximumLength(50);
 
         RuleFor(member => member.Title)
             .NotEmpty()
-            .MaximumLength(64);
+            .MaximumLength(50);
 
         RuleFor(member => member.About)
-            .MaximumLength(1000)
+            .NotEmpty()
+            .MaximumLength(450)
             .When(member => member.IsMainMember); //this property is only for main members
-        
+
+        RuleFor(member => member.OwnPortfolio)
+            .MaximumLength(150)
+            .When(member => member.IsMainMember);
+
     }
 }

@@ -8,15 +8,19 @@ public class AddContactMessageRequestValidator : AbstractValidator<AddContactMes
     public AddContactMessageRequestValidator()
     {
         RuleFor(message => message.Email)
-            .EmailAddress();
+            .EmailAddress()
+            .MaximumLength(320);
 
         RuleFor(message => message.Name)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(50);
 
         RuleFor(message => message.Subject)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(150);
 
         RuleFor(message => message.Text)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(1000);
     }
 }

@@ -8,10 +8,12 @@ public class UpdateCooperationRequestValidator:AbstractValidator<UpdateCooperati
     public UpdateCooperationRequestValidator()
     {
         RuleFor(cooperation => cooperation.Title)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(150);
 
         RuleFor(cooperation => cooperation.Description)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(650);
 
         RuleFor(cooperation => cooperation.StartDate)
             .LessThan(DateTime.Now);
