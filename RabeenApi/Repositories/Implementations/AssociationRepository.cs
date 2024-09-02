@@ -46,7 +46,7 @@ public class AssociationRepository(DataContext context) : GenericRepository<Asso
 
         var firstCooperation = await _context
             .AssociationCooperations
-            .OrderByDescending(c=>c.StartDate)
+            .OrderBy(c=>c.StartDate)
             .FirstOrDefaultAsync(c => c.AssociationId == associationId);
 
         return firstCooperation?.StartDate ?? new DateTime();
