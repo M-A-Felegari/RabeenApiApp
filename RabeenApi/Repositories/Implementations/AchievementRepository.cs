@@ -15,7 +15,6 @@ public class AchievementRepository(DataContext context) : GenericRepository<Achi
             .FirstOrDefaultAsync(m => m.Id == memberId);
         if (member is null)
             throw new KeyNotFoundException($"member with id {memberId} not found");
-        //todo: test if there isn't any achievement don't throw exception
         return member.Achievements is not null ? member.Achievements.ToList() : [];
     }
 

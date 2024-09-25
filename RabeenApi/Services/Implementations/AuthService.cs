@@ -29,33 +29,31 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
-            {
-                var isAlreadyUsed = await _userRepository.IsAlreadyUsedUsernameAsync(request.Username);
-                if (isAlreadyUsed)
-                {
-                    result.Code = Status.UserAlreadyExist;
-                    result.ErrorMessage = $"username {request.Username} already exist";
-                }
-                else
-                {
-                    var user = _mapper.Map<User>(request);
-                    await _userRepository.AddAsync(user);
-                    var token = GenerateJwtToken(user);
 
-                    result.Code = Status.Success;
-                    result.Data = new UserTokenResult(token);
-                }
+            var isAlreadyUsed = await _userRepository.IsAlreadyUsedUsernameAsync(request.Username);
+            if (isAlreadyUsed)
+            {
+                result.Code = Status.UserAlreadyExist;
+                result.ErrorMessage = $"username {request.Username} already exist";
+                return result;
             }
+
+            var user = _mapper.Map<User>(request);
+            await _userRepository.AddAsync(user);
+            var token = GenerateJwtToken(user);
+
+            result.Code = Status.Success;
+            result.Data = new UserTokenResult(token);
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 
     public async Task<BaseResult<UserTokenResult>> LoginAsync(UserLoginRequest request)
@@ -69,31 +67,29 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
-            {
-                var user = await _userRepository.GetByUsernameAndPasswordAsync(request.Username, request.Password);
-                if (user is null)
-                {
-                    result.Code = Status.UnAuthorizedUser;
-                    result.ErrorMessage = "username or password is incorrect";
-                }
-                else
-                {
-                    var token = GenerateJwtToken(user);
 
-                    result.Code = Status.Success;
-                    result.Data = new UserTokenResult(token);
-                }
+            var user = await _userRepository.GetByUsernameAndPasswordAsync(request.Username, request.Password);
+            if (user is null)
+            {
+                result.Code = Status.UnAuthorizedUser;
+                result.ErrorMessage = "username or password is incorrect";
+                return result;
             }
+
+            var token = GenerateJwtToken(user);
+
+            result.Code = Status.Success;
+            result.Data = new UserTokenResult(token);
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 
 

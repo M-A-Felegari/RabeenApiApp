@@ -10,7 +10,8 @@ using RabeenApi.Validators.ContactMessage;
 
 namespace RabeenApi.Services.Implementations;
 
-public class ContactMessageService(IContactMessageRepository contactMessageRepository, IMapper mapper) : IContactMessageService
+public class ContactMessageService(IContactMessageRepository contactMessageRepository, IMapper mapper)
+    : IContactMessageService
 {
     private readonly IContactMessageRepository _contactMessageRepository = contactMessageRepository;
     private readonly IMapper _mapper = mapper;
@@ -27,41 +28,39 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
-            {
-                var totalMessages = await _contactMessageRepository.CountAsync();
-                var totalPages = PaginationHelper.CalculateTotalPages(totalMessages, request.PageLength);
-                if (request.PageNumber > totalPages)
-                {
-                    result.Code = Status.OutOfRangePage;
-                    result.ErrorMessage = $"last page is {totalPages}";
-                }
-                else
-                {
-                    var messages = await _contactMessageRepository
-                        .GetLastsByPagination(request.PageNumber, request.PageLength);
 
-                    var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
-                    result.Code = Status.Success;
-                    result.Data = new PaginatedResult<ContactMessageInfoResult>
-                    {
-                        Items = messageInfoResults,
-                        CurrentPage = request.PageNumber,
-                        TotalPages = totalPages
-                    };
-                }
+            var totalMessages = await _contactMessageRepository.CountAsync();
+            var totalPages = PaginationHelper.CalculateTotalPages(totalMessages, request.PageLength);
+            if (request.PageNumber > totalPages)
+            {
+                result.Code = Status.OutOfRangePage;
+                result.ErrorMessage = $"last page is {totalPages}";
+                return result;
             }
+
+            var messages = await _contactMessageRepository
+                .GetLastsByPagination(request.PageNumber, request.PageLength);
+
+            var messageInfoResults = _mapper.Map<List<ContactMessageInfoResult>>(messages);
+            result.Code = Status.Success;
+            result.Data = new PaginatedResult<ContactMessageInfoResult>
+            {
+                Items = messageInfoResults,
+                CurrentPage = request.PageNumber,
+                TotalPages = totalPages
+            };
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
-    
+
     public async Task<BaseResult<ContactMessageInfoResult>> AddMessageAsync(
         AddContactMessageRequest request)
     {
@@ -74,26 +73,25 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
-            {
-                var message = _mapper.Map<ContactMessage>(request);
 
-                var addedMessage = await _contactMessageRepository.AddAsync(message);
+            var message = _mapper.Map<ContactMessage>(request);
 
-                var addedMessageResult = _mapper.Map<ContactMessageInfoResult>(addedMessage);
+            var addedMessage = await _contactMessageRepository.AddAsync(message);
 
-                result.Code = Status.Success;
-                result.Data = addedMessageResult;
-            }
+            var addedMessageResult = _mapper.Map<ContactMessageInfoResult>(addedMessage);
+
+            result.Code = Status.Success;
+            result.Data = addedMessageResult;
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 
     public async Task<BaseResult<object>> DeleteMessageAsync(int id)
@@ -107,19 +105,18 @@ public class ContactMessageService(IContactMessageRepository contactMessageRepos
             {
                 result.Code = Status.ContactMessageNotFound;
                 result.ErrorMessage = $"message with id {id} not found";
+                return result;
             }
-            else
-            {
-                await _contactMessageRepository.DeleteAsync(message.Id);
-                result.Code = Status.Success;
-            }
+
+            await _contactMessageRepository.DeleteAsync(message.Id);
+            result.Code = Status.Success;
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 }

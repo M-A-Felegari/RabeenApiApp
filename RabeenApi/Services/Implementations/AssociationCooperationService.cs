@@ -34,50 +34,47 @@ public class AssociationCooperationService(
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
+
+            var association = await _associationRepository.GetAsync(associationId);
+            if (association is null)
             {
-                var association = await _associationRepository.GetAsync(associationId);
-                if (association is null)
-                {
-                    result.Code = Status.AssociationNotFound;
-                    result.ErrorMessage = $"association with id {associationId} not found";
-                }
-                else
-                {
-                    var totalCooperations = await _associationRepository
-                        .CountTotalCooperationsAsync(association.Id);
-                    var totalPages = PaginationHelper.CalculateTotalPages(totalCooperations, request.PageLength);
-                    if (request.PageNumber > totalPages)
-                    {
-                        result.Code = Status.OutOfRangePage;
-                        result.ErrorMessage = $"last page is {totalPages}";
-                    }
-                    else
-                    {
-                        var cooperations = 
-                            await _cooperationRepository.GetAllByAssociationIdAsync(associationId,
-                                request.PageNumber, request.PageLength);
-                        var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
-                        
-                        result.Code = Status.Success;
-                        result.Data = new PaginatedResult<AssociationCooperationResult>
-                        {
-                            CurrentPage = request.PageNumber,
-                            TotalPages = totalPages,
-                            Items = cooperationResults
-                        };
-                    }
-                }
+                result.Code = Status.AssociationNotFound;
+                result.ErrorMessage = $"association with id {associationId} not found";
+                return result;
             }
+
+            var totalCooperations = await _associationRepository
+                .CountTotalCooperationsAsync(association.Id);
+            var totalPages = PaginationHelper.CalculateTotalPages(totalCooperations, request.PageLength);
+            if (request.PageNumber > totalPages)
+            {
+                result.Code = Status.OutOfRangePage;
+                result.ErrorMessage = $"last page is {totalPages}";
+                return result;
+            }
+
+            var cooperations =
+                await _cooperationRepository.GetAllByAssociationIdAsync(associationId,
+                    request.PageNumber, request.PageLength);
+            var cooperationResults = _mapper.Map<List<AssociationCooperationResult>>(cooperations);
+
+            result.Code = Status.Success;
+            result.Data = new PaginatedResult<AssociationCooperationResult>
+            {
+                CurrentPage = request.PageNumber,
+                TotalPages = totalPages,
+                Items = cooperationResults
+            };
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 
     public async Task<BaseResult<AssociationCooperationResult>> AddCooperationAsync(int associationId,
@@ -92,38 +89,37 @@ public class AssociationCooperationService(
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
+
+            var association = await _associationRepository.GetAsync(associationId);
+            if (association is null)
             {
-                var association = await _associationRepository.GetAsync(associationId);
-                if (association is null)
-                {
-                    result.Code = Status.AssociationNotFound;
-                    result.ErrorMessage = $"association with id {associationId} not found";
-                }
-                else
-                {
-                    var cooperation = _mapper.Map<AssociationCooperation>(request);
-                    cooperation.AssociationId = associationId;
-                    await _cooperationRepository.AddAsync(cooperation);
-                    await _fileSaver
-                        .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
-                    var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
-                    result.Data = cooperationResult;
-                    result.Code = Status.Success;
-                }
+                result.Code = Status.AssociationNotFound;
+                result.ErrorMessage = $"association with id {associationId} not found";
+                return result;
             }
+
+            var cooperation = _mapper.Map<AssociationCooperation>(request);
+            cooperation.AssociationId = associationId;
+            await _cooperationRepository.AddAsync(cooperation);
+            await _fileSaver
+                .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
+            var cooperationResult = _mapper.Map<AssociationCooperationResult>(cooperation);
+
+            result.Data = cooperationResult;
+            result.Code = Status.Success;
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 
-    public async Task<BaseResult<AssociationCooperationResult>> UpdateCooperationAsync( int id,
+    public async Task<BaseResult<AssociationCooperationResult>> UpdateCooperationAsync(int id,
         UpdateCooperationRequest request)
     {
         var result = new BaseResult<AssociationCooperationResult>();
@@ -135,43 +131,42 @@ public class AssociationCooperationService(
             {
                 result.Code = Status.NotValid;
                 result.ErrorMessage = validationResult.ToString("~");
+                return result;
             }
-            else
+
+            var existingCooperation = await _cooperationRepository.GetAsync(id);
+            if (existingCooperation is null)
             {
-                var existingCooperation = await _cooperationRepository.GetAsync(id);
-                if (existingCooperation is null)
-                {
-                    result.Code = Status.CooperationNotFound;
-                    result.ErrorMessage = $"Cooperation with id {id} not found";
-                }
-                else
-                {
-                    var updatedCooperation = _mapper.Map<AssociationCooperation>(request);
-                    updatedCooperation.AssociationId = existingCooperation.AssociationId; 
-                    //if we don't do this it's association id will be 0 and thrown an axception
-
-                    updatedCooperation.Id = existingCooperation.Id;
-                        
-                    await _cooperationRepository.UpdateAsync(updatedCooperation);
-                        
-                    if (request.Image is not null)
-                        await _fileSaver
-                            .SaveFileAsync(request.Image, $@"{FileSaver.SaveCooperationImagePath}\{existingCooperation.Id}.jpg");
-
-                    var cooperationResult = _mapper.Map<AssociationCooperationResult>(updatedCooperation);
-                        
-                    result.Data = cooperationResult;
-                    result.Code = Status.Success;
-                }
+                result.Code = Status.CooperationNotFound;
+                result.ErrorMessage = $"Cooperation with id {id} not found";
+                return result;
             }
+
+            var updatedCooperation = _mapper.Map<AssociationCooperation>(request);
+            updatedCooperation.AssociationId = existingCooperation.AssociationId;
+            //if we don't do this it's association id will be 0 and thrown an axception
+
+            updatedCooperation.Id = existingCooperation.Id;
+
+            await _cooperationRepository.UpdateAsync(updatedCooperation);
+
+            if (request.Image is not null)
+                await _fileSaver
+                    .SaveFileAsync(request.Image,
+                        $@"{FileSaver.SaveCooperationImagePath}\{existingCooperation.Id}.jpg");
+
+            var cooperationResult = _mapper.Map<AssociationCooperationResult>(updatedCooperation);
+
+            result.Data = cooperationResult;
+            result.Code = Status.Success;
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 
     public async Task<BaseResult<object>> DeleteCooperationAsync(int id)
@@ -184,20 +179,19 @@ public class AssociationCooperationService(
             {
                 result.Code = Status.CooperationNotFound;
                 result.ErrorMessage = $"Cooperation with id {id} not found";
+                return result;
             }
-            else
-            {
-                await _cooperationRepository.DeleteAsync(cooperation.Id);
-                _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
-                result.Code = Status.Success;
-            }
+
+            await _cooperationRepository.DeleteAsync(cooperation.Id);
+            _fileSaver.RemoveFileIfExist($@"{FileSaver.SaveCooperationImagePath}\{cooperation.Id}.jpg");
+            result.Code = Status.Success;
+            return result;
         }
         catch (Exception ex)
         {
             result.Code = Status.ExceptionThrown;
             result.ErrorMessage = ex.Message;
+            return result;
         }
-
-        return result;
     }
 }
