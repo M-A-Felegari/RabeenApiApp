@@ -7,3 +7,6 @@ DataAccess/obj
 
 #ignore the important information
 RabeenApi/appsettings.json
+
+#ide configurations
+.vs
