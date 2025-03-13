@@ -8,9 +8,9 @@ public class ChangePasswordRequestValidator:AbstractValidator<ChangePasswordRequ
     public ChangePasswordRequestValidator()
     {
         RuleFor(c => c.OldPassword)
-            .Length(8, 30);
+            .Length(8, 32);
         
         RuleFor(c => c.NewPassword)
-            .Length(8, 30);
+            .Length(8, 32);
     }
 }
